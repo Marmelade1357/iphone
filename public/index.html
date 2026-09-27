@@ -46,7 +46,7 @@
   </div>
   <div class="ctl toggles">
     <label class="tog"><input type="checkbox" id="syncTog" checked /> <span>Gemeinsam drehen</span></label>
-    <label class="tog"><input type="checkbox" id="gridTog" checked /> <span>Lineal</span></label>
+    <label class="tog"><input type="checkbox" id="autoTog" /> <span>Drehteller</span></label>
   </div>
 </nav>
 
@@ -61,7 +61,8 @@
 </nav>
 
 <div class="float side-actions">
-  <button class="pill-btn" id="specsBtn" aria-expanded="false" aria-controls="specsPanel">Technische Daten</button>
+  <button class="pill-btn" id="specsBtn" aria-expanded="false" aria-controls="specsPanel">Vergleich &amp; Daten</button>
+  <button class="ghost-btn" id="presentBtn" title="Präsentationsmodus (Taste P)">Präsentieren</button>
   <button class="icon-btn" id="resetBtn" title="Ansicht zurücksetzen" aria-label="Ansicht zurücksetzen">⟲</button>
   <button class="icon-btn" id="helpBtn" title="Bedienung" aria-label="Bedienung">?</button>
 </div>
@@ -73,14 +74,17 @@
     <li>Tasten anklicken: drücken · Display antippen: entsperren</li>
     <li>Hintergrund ziehen: Blickwinkel · Mausrad/Pinch: Zoom</li>
     <li>Rechte Maustaste ziehen: verschieben</li>
+    <li>Präsentieren (Taste P): Vollbild, Bedienelemente aus, Drehteller an</li>
   </ul>
 </div>
+
+<button class="float exit-btn" id="presentExit">Präsentation beenden</button>
 
 <section class="float slots" id="slots" aria-label="Geräteauswahl"></section>
 
 <aside class="float specs" id="specsPanel" aria-label="Technische Daten" hidden>
   <div class="specs-head">
-    <h2>Technische Daten</h2>
+    <h2>Vergleich &amp; Daten</h2>
     <div class="ctl">
       <div class="seg" id="priceSeg">
         <button data-v="nom">Damals</button><button data-v="real">Inflationsbereinigt</button>

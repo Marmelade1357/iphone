@@ -31,7 +31,7 @@ const state = {
   price: 'nom',
   fold: 180,
   sync: true,
-  grid: true,
+  auto: false,
 };
 
 function readHash() {
@@ -214,71 +214,119 @@ function textFit(g, text, maxW, weight, size) {
   let fs = size; g.font = `${weight} ${fs}px ${FONT_UI}`;
   while (g.measureText(text).width > maxW && fs > 20) { fs -= 4; g.font = `${weight} ${fs}px ${FONT_UI}`; }
 }
+// Telekom-Logo (vom Nutzer bereitgestellt) – wird nach dem Laden in alle Markenflächen gezeichnet
+const TLOGO = new Image();
+const brandTextures = [];
+function brandTex(w, h, draw) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  const redraw = () => { const g = c.getContext('2d'); g.clearRect(0, 0, w, h); draw(g, w, h); t.needsUpdate = true; };
+  redraw(); brandTextures.push(redraw);
+  return t;
+}
+TLOGO.onload = () => brandTextures.forEach((f) => f());
+TLOGO.src = 'assets/telekom-logo.svg';
+// Logo in Wunschfarbe (z. B. weiß auf Magenta) zeichnen; h = Höhe in px
+function drawLogo(g, x, y, h, color) {
+  if (!TLOGO.complete || !TLOGO.naturalWidth) return 0;
+  const w = h * (TLOGO.naturalWidth / TLOGO.naturalHeight);
+  const off = document.createElement('canvas'); off.width = Math.ceil(w); off.height = Math.ceil(h);
+  const o = off.getContext('2d');
+  o.drawImage(TLOGO, 0, 0, w, h);
+  if (color) { o.globalCompositeOperation = 'source-in'; o.fillStyle = color; o.fillRect(0, 0, w, h); }
+  g.drawImage(off, x, y);
+  return w;
+}
 function posterTelekom() {
-  return canvasTex(1400, 2200, (g, W, H) => {
+  return brandTex(1400, 2200, (g, W, H) => {
     const gr = g.createLinearGradient(0, 0, W * 0.4, H);
     gr.addColorStop(0, '#ff3fa4'); gr.addColorStop(0.55, MAGENTA); gr.addColorStop(1, '#8a0048');
     g.fillStyle = gr; g.fillRect(0, 0, W, H);
-    // stilisierte iPhones
     const phone = (x, y, w, h, c) => {
       g.save(); g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowBlur = 40; g.shadowOffsetY = 20;
       g.fillStyle = '#16161a'; roundRect(g, x, y, w, h, w * 0.16); g.fill(); g.restore();
       const sg = g.createLinearGradient(x, y, x + w, y + h); sg.addColorStop(0, c); sg.addColorStop(1, '#1a1440');
       g.fillStyle = sg; roundRect(g, x + 14, y + 14, w - 28, h - 28, w * 0.13); g.fill();
-      g.fillStyle = '#000'; roundRect(g, x + w / 2 - w * 0.16, y + 34, w * 0.32, 30, 15); g.fill();
+      g.fillStyle = '#000'; roundRect(g, x + w / 2 - w * 0.12, y + 34, w * 0.24, 30, 15); g.fill();
     };
-    phone(260, 820, 420, 860, '#ff9ecf'); phone(720, 700, 440, 900, '#7fb4ff');
+    phone(250, 900, 420, 860, '#ff9ecf'); phone(720, 780, 440, 900, '#7fb4ff');
+    drawLogo(g, 100, 110, 150, '#ffffff');
     g.fillStyle = '#fff'; g.textAlign = 'left';
-    textFit(g, 'Das neue iPhone.', W - 200, 800, 130); g.fillText('Das neue iPhone.', 100, 300);
-    textFit(g, 'Jetzt bei der Telekom.', W - 200, 600, 92); g.fillText('Jetzt bei der Telekom.', 100, 430);
-    g.font = `500 64px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.9)';
-    g.fillText('Im besten Netz – mit 5G.', 100, 560);
-    g.fillStyle = '#fff'; roundRect(g, 100, 1880, 620, 130, 65); g.fill();
-    g.fillStyle = MAGENTA; g.font = `700 60px ${FONT_UI}`; g.fillText('Jetzt beraten lassen', 150, 1965);
+    textFit(g, 'iPhone 18 Pro.', W - 200, 800, 140); g.fillText('iPhone 18 Pro.', 100, 450);
+    textFit(g, 'Besser im besten Netz.', W - 200, 650, 96); g.fillText('Besser im besten Netz.', 100, 580);
+    g.font = `500 60px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.9)';
+    g.fillText('Jetzt bei der Telekom – mit 5G.', 100, 690);
+    g.fillStyle = '#fff'; roundRect(g, 100, 1900, 620, 130, 65); g.fill();
+    g.fillStyle = MAGENTA; g.font = `700 60px ${FONT_UI}`; g.fillText('Jetzt beraten lassen', 150, 1985);
   });
 }
 function posterDuo() {
-  return canvasTex(1400, 2200, (g, W, H) => {
+  return brandTex(1400, 2200, (g, W, H) => {
     g.fillStyle = '#0b0b0e'; g.fillRect(0, 0, W, H);
     const rg = g.createRadialGradient(W / 2, H * 0.55, 50, W / 2, H * 0.55, 900);
     rg.addColorStop(0, 'rgba(226,0,116,.55)'); rg.addColorStop(1, 'rgba(226,0,116,0)');
     g.fillStyle = rg; g.fillRect(0, 0, W, H);
-    // aufgeklapptes Duo, stilisiert
-    const x = 250, y = 800, w = 900, h = 640;
+    const x = 250, y = 820, w = 900, h = 640;
     g.fillStyle = '#d9d4c9'; roundRect(g, x, y, w, h, 70); g.fill();
     const sg = g.createLinearGradient(x, y, x + w, y + h); sg.addColorStop(0, '#5b7cff'); sg.addColorStop(0.5, '#b04fd8'); sg.addColorStop(1, MAGENTA);
     g.fillStyle = sg; roundRect(g, x + 18, y + 18, w - 36, h - 36, 56); g.fill();
-    g.fillStyle = 'rgba(0,0,0,.18)'; g.fillRect(x + w / 2 - 2, y + 18, 4, h - 36);
     g.fillStyle = '#fff'; g.textAlign = 'center';
-    g.font = `800 150px ${FONT_UI}`; g.fillText('iPhone Duo', W / 2, 360);
-    g.font = `500 70px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.85)';
-    g.fillText('Faltbar. Riesig. Pocketable.', W / 2, 480);
+    g.font = `800 150px ${FONT_UI}`; g.fillText('iPhone Duo', W / 2, 380);
+    g.font = `500 68px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.85)';
+    g.fillText('Das erste faltbare iPhone.', W / 2, 500);
     g.font = `700 76px ${FONT_UI}`; g.fillStyle = '#ff5fb0';
     g.fillText('Ab 23.10. bei der Telekom', W / 2, 1700);
     g.font = `500 56px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.75)';
-    g.fillText('Vorbestellen ab 16.10.', W / 2, 1800);
+    g.fillText('Jetzt vorbestellen', W / 2, 1800);
+    const lh = 120, lw = drawLogo(g, -9999, -9999, lh) || 0;
+    if (lw) drawLogo(g, (W - lw) / 2, 1930, lh, MAGENTA);
   });
 }
 function accentWallTex() {
-  return canvasTex(2048, 1600, (g, W, H) => {
+  return brandTex(2048, 1600, (g, W, H) => {
     g.fillStyle = MAGENTA; g.fillRect(0, 0, W, H);
-    g.fillStyle = 'rgba(255,255,255,.08)';
-    for (let i = 0; i < 14; i++) { g.beginPath(); g.arc(W * 0.8, H * 0.2, 140 + i * 110, 0, Math.PI * 2); g.lineWidth = 3; g.strokeStyle = 'rgba(255,255,255,.08)'; g.stroke(); }
+    for (let i = 0; i < 14; i++) { g.beginPath(); g.arc(W * 0.82, H * 0.2, 140 + i * 110, 0, Math.PI * 2); g.lineWidth = 3; g.strokeStyle = 'rgba(255,255,255,.07)'; g.stroke(); }
+    drawLogo(g, 150, 250, 330, '#ffffff');
     g.fillStyle = '#fff'; g.textAlign = 'left';
-    g.font = `800 150px ${FONT_UI}`; g.fillText('Erleben,', 140, 560);
-    g.fillText('was verbindet.', 140, 730);
+    g.font = `800 150px ${FONT_UI}`; g.fillText('Connecting', 150, 830);
+    g.fillText('your world.', 150, 990);
     g.font = `500 70px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.9)';
-    g.fillText('Telekom × iPhone', 140, 880);
+    g.fillText('Telekom × iPhone', 150, 1130);
   });
 }
 function counterTex() {
-  return canvasTex(2100, 1060, (g, W, H) => {
+  return brandTex(2100, 1060, (g, W, H) => {
     g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
     g.fillStyle = MAGENTA; g.fillRect(0, H - 120, W, 120);
+    const lw = drawLogo(g, -9999, -9999, 200) || 0;
+    if (lw) drawLogo(g, (W - lw) / 2, 110, 200);
     g.fillStyle = '#1d1d1f'; g.textAlign = 'center';
-    g.font = `700 120px ${FONT_UI}`; g.fillText('Beratung & Service', W / 2, 460);
-    g.font = `500 64px ${FONT_UI}`; g.fillStyle = '#6b6b70';
-    g.fillText('Tarife · Vertragsverlängerung · Einrichtung', W / 2, 580);
+    g.font = `700 110px ${FONT_UI}`; g.fillText('Beratung & Service', W / 2, 520);
+    g.font = `500 60px ${FONT_UI}`; g.fillStyle = '#6b6b70';
+    g.fillText('Tarife · Vertragsverlängerung · Einrichtung', W / 2, 630);
+  });
+}
+function tvTex() {
+  return brandTex(1920, 1080, (g, W, H) => {
+    const gr = g.createLinearGradient(0, 0, W, H); gr.addColorStop(0, '#111116'); gr.addColorStop(1, '#2a0a1d');
+    g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    const rg = g.createRadialGradient(W * 0.72, H * 0.5, 40, W * 0.72, H * 0.5, 620);
+    rg.addColorStop(0, 'rgba(226,0,116,.5)'); rg.addColorStop(1, 'rgba(226,0,116,0)'); g.fillStyle = rg; g.fillRect(0, 0, W, H);
+    // stilisiertes Kamera-Plateau
+    g.fillStyle = '#c9c9cc'; roundRect(g, W * 0.56, H * 0.2, W * 0.32, H * 0.36, 60); g.fill();
+    g.fillStyle = '#9d9da2'; roundRect(g, W * 0.575, H * 0.23, W * 0.29, H * 0.3, 44); g.fill();
+    [[0.63, 0.32], [0.63, 0.46], [0.73, 0.39]].forEach(([cx, cy]) => {
+      g.fillStyle = '#e8e8ea'; g.beginPath(); g.arc(W * cx, H * cy, 72, 0, Math.PI * 2); g.fill();
+      g.fillStyle = '#101018'; g.beginPath(); g.arc(W * cx, H * cy, 58, 0, Math.PI * 2); g.fill();
+      g.fillStyle = '#2c3350'; g.beginPath(); g.arc(W * cx, H * cy, 24, 0, Math.PI * 2); g.fill();
+    });
+    g.fillStyle = '#fff'; g.textAlign = 'left';
+    g.font = `800 110px ${FONT_UI}`; g.fillText('iPhone 18 Pro', 110, 330);
+    g.font = `500 54px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.8)';
+    ['A20 Pro in 2 nm', 'Variable Blende', 'Bis zu 45 h Video (Pro Max)'].forEach((t, i) => g.fillText(t, 110, 460 + i * 80));
+    g.font = `700 58px ${FONT_UI}`; g.fillStyle = '#ff5fb0'; g.fillText('Besser im besten Netz.', 110, 880);
+    drawLogo(g, W - 190, H - 190, 110, '#ffffff');
   });
 }
 function roundRect(g, x, y, w, h, r) {
@@ -346,6 +394,34 @@ function buildShowroom() {
   glow.position.set(0, 12, 315); counter.add(glow);
   counter.position.set(3700, FLOOR, 200); counter.rotation.y = -Math.PI / 2;
   room.add(counter);
+  // Wand-Display über der Theke
+  const tv = new THREE.Group();
+  const tvBody = new THREE.Mesh(new THREE.BoxGeometry(1640, 940, 40), new THREE.MeshStandardMaterial({ color: 0x111113, roughness: 0.4 }));
+  const tvScreen = new THREE.Mesh(new THREE.PlaneGeometry(1600, 900), new THREE.MeshBasicMaterial({ map: tvTex(), toneMapped: false }));
+  tvScreen.position.z = 21; tv.add(tvBody, tvScreen);
+  tv.position.set(x1 - 30, FLOOR + 2050, 200); tv.rotation.y = -Math.PI / 2; room.add(tv);
+  // Teppich unter dem Haupttisch
+  const rugShape = new THREE.Shape();
+  { const rw = 3400, rd = 2000, rr = 300;
+    rugShape.moveTo(-rw / 2 + rr, -rd / 2); rugShape.lineTo(rw / 2 - rr, -rd / 2); rugShape.quadraticCurveTo(rw / 2, -rd / 2, rw / 2, -rd / 2 + rr);
+    rugShape.lineTo(rw / 2, rd / 2 - rr); rugShape.quadraticCurveTo(rw / 2, rd / 2, rw / 2 - rr, rd / 2); rugShape.lineTo(-rw / 2 + rr, rd / 2);
+    rugShape.quadraticCurveTo(-rw / 2, rd / 2, -rw / 2, rd / 2 - rr); rugShape.lineTo(-rw / 2, -rd / 2 + rr); rugShape.quadraticCurveTo(-rw / 2, -rd / 2, -rw / 2 + rr, -rd / 2); }
+  const rug = new THREE.Mesh(new THREE.ShapeGeometry(rugShape, 12), new THREE.MeshStandardMaterial({ color: 0xd9d3ca, roughness: 1 }));
+  rug.rotation.x = -Math.PI / 2; rug.position.set(0, FLOOR + 2, 150); rug.receiveShadow = true; room.add(rug);
+  const rugEdge = new THREE.Mesh(new THREE.ShapeGeometry(rugShape, 12), new THREE.MeshStandardMaterial({ color: 0xe20074, roughness: 1 }));
+  rugEdge.rotation.x = -Math.PI / 2; rugEdge.scale.set(1.02, 1.035, 1); rugEdge.position.set(0, FLOOR + 1, 150); room.add(rugEdge);
+  // Pendelleuchten über dem Haupttisch
+  const lampMat = new THREE.MeshStandardMaterial({ color: 0xf4f2ee, roughness: 0.5, metalness: 0.1 });
+  const cableMat = new THREE.MeshBasicMaterial({ color: 0x333333 });
+  [-800, 0, 800].forEach((lx) => {
+    const shade = new THREE.Mesh(new THREE.CylinderGeometry(90, 170, 190, 40, 1, true), lampMat);
+    const y = TABLE_TOP + 1250;
+    shade.position.set(lx, y, 0); room.add(shade);
+    const bulb = new THREE.Mesh(new THREE.CircleGeometry(160, 40), new THREE.MeshBasicMaterial({ color: 0xfff6e8, toneMapped: false }));
+    bulb.rotation.x = Math.PI / 2; bulb.position.set(lx, y - 92, 0); room.add(bulb);
+    const cable = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, FLOOR + h - y - 95, 6), cableMat);
+    cable.position.set(lx, (y + 95 + FLOOR + h) / 2, 0); room.add(cable);
+  });
   // weitere Präsentationstische im Hintergrund
   room.add(makeTable(2000, 850, -2600, -1300, false));
   room.add(makeTable(2000, 850, -2900, 1700, false));
@@ -382,41 +458,6 @@ scene.add(mainTable);
   sc.left = -TABLE_W / 2 - 200; sc.right = TABLE_W / 2 + 200; sc.top = TABLE_D / 2 + 700; sc.bottom = -TABLE_D / 2 - 700;
   sc.near = 10; sc.far = 4000; sc.updateProjectionMatrix();
   key.position.set(350, TABLE_TOP + 1600, 700); key.target.position.set(0, TABLE_TOP, 0);
-}
-
-// Lineal auf dem Tisch
-let ruler = null;
-function rulerTexture(cm) {
-  const pxPerCm = 60, c = document.createElement('canvas');
-  c.width = Math.min(8192, cm * pxPerCm + 40); c.height = 180;
-  const g = c.getContext('2d');
-  g.fillStyle = '#f7f4ec'; g.fillRect(0, 0, c.width, c.height);
-  g.fillStyle = '#1d1d1f'; g.strokeStyle = '#1d1d1f';
-  for (let mmI = 0; mmI <= cm * 10; mmI++) {
-    const x = 20 + mmI * pxPerCm / 10;
-    const len = mmI % 10 === 0 ? 70 : mmI % 5 === 0 ? 48 : 28;
-    g.lineWidth = mmI % 10 === 0 ? 3 : 1.5;
-    g.beginPath(); g.moveTo(x, 0); g.lineTo(x, len); g.stroke();
-    if (mmI % 10 === 0) { g.font = '600 40px system-ui, sans-serif'; g.textAlign = 'center'; g.fillText(String(mmI / 10), x, 118); }
-  }
-  g.font = '500 28px system-ui, sans-serif'; g.textAlign = 'right'; g.fillText('cm', c.width - 16, 166);
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
-  return t;
-}
-function buildRuler(lengthMm) {
-  if (ruler) {
-    scene.remove(ruler); ruler.geometry.dispose();
-    ruler.material.forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); });
-  }
-  const cm = Math.ceil(lengthMm / 10);
-  const len = cm * 10 + 20 / 6 * 2;
-  const side = () => new THREE.MeshStandardMaterial({ color: 0xe9e4d8, roughness: 0.6 });
-  const mats = [side(), side(), new THREE.MeshStandardMaterial({ map: rulerTexture(cm), roughness: 0.6 }), side(), side(), side()];
-  ruler = new THREE.Mesh(new THREE.BoxGeometry(len, 1.2, 30), mats);
-  ruler.position.set(0, TABLE_TOP + 0.6, 72);
-  ruler.receiveShadow = true;
-  ruler.visible = state.grid;
-  scene.add(ruler);
 }
 
 // Acryl-Ständer (nur bei 1 Gerät)
@@ -473,7 +514,6 @@ function computeLayout() {
   })) + 10;
   let x = -total / 2;
   act.forEach((d, k) => { d.x = x + spans[k] / 2; x += spans[k] + GAP; });
-  buildRuler(Math.max(200, total + 40));
   stands.forEach((s) => { scene.remove(s); s.geometry.dispose(); }); stands = [];
   if (single) {
     const p = act[0].phone.p;
@@ -553,6 +593,7 @@ function pick(ev) {
 }
 
 function onPointerDown(ev) {
+  if (state.auto && !document.body.classList.contains('present')) setAuto(false);
   const u = pick(ev);
   if (!u) return; // Hintergrund → OrbitControls
   if (u.part === 'btn') {
@@ -713,6 +754,9 @@ function tick() {
   const now = performance.now();
   if (fitPending) { fitPending = false; fitCamera(true, new THREE.Vector3(0, 0.16, 1).normalize()); }
   const k = Math.min(1, dt * 8);
+  controls.autoRotate = state.auto && isSingle() && !drag;
+  controls.autoRotateSpeed = 1.2;
+  if (state.auto && !isSingle() && !drag) devices.forEach((d) => { if (d) { d.target.y += dt * 0.45; d.rot.y = d.target.y; } });
   for (const d of devices) {
     if (!d) continue;
     d.rot.x += (d.target.x - d.rot.x) * k;
@@ -808,73 +852,114 @@ function buttonsOf(p) {
   return b.join(', ');
 }
 
-const ROWS = [
-  { k: 'Marktstart', f: (p) => ({ t: p.launch }) },
-  { k: 'Preis', price: true },
-  { k: 'Speicher', f: (p) => ({ t: p.prices.map((x) => x[0]).join(' · ') }) },
-  { k: 'Höhe', f: (p) => ({ t: `${mm(p.h)} mm`, n: p.h }), bar: true },
-  { k: 'Breite', f: (p) => ({ t: p.foldable ? `${mm(p.w)} mm zu · ${mm(p.wOpen)} mm auf` : `${mm(p.w)} mm`, n: p.w }), bar: true },
-  { k: 'Dicke', f: (p) => ({ t: p.foldable ? `${mm(p.d)} mm zu · ${mm(p.dOpen)} mm auf` : `${mm(p.d)} mm`, n: p.d }), better: 'low', bar: true },
-  { k: 'Gewicht', f: (p) => ({ t: `${p.g} g`, n: p.g }), better: 'low', bar: true, unit: 'g' },
-  { k: 'Display', f: (p) => ({ t: p.foldable ? `${nf(p.diagInner, 1)}″ innen · ${nf(p.diag, 1)}″ außen` : `${nf(p.diag, 1)}″`, n: p.foldable ? p.diagInner : p.diag, sub: `${p.disp}${p.hz > 60 ? ` · ${p.hz} Hz` : ''}` }), better: 'high', bar: true },
-  { k: 'Auflösung', f: (p) => ({ t: p.foldable ? `${p.resInner[0]} × ${p.resInner[1]} innen` : `${p.res[1]} × ${p.res[0]}`, n: p.foldable ? p.ppiInner : p.ppi, sub: p.foldable ? `${p.ppiInner} ppi innen · ${p.res[1]} × ${p.res[0]} außen` : `${p.ppi} ppi` }), better: 'high' },
-  { k: 'Displayanteil Front', f: (p) => { const r = screenRatio(p); return { t: `≈ ${nf(r)} %`, n: r }; }, better: 'high', bar: true },
-  { k: 'Chip', f: (p) => ({ t: p.chip }) },
-  { k: 'Kamera hinten', f: (p) => ({ t: p.cam, sub: `${p.camCount} Objektiv${p.camCount > 1 ? 'e' : ''}${p.lidar ? ' + LiDAR' : ''}` }) },
-  { k: 'Entsperren', f: (p) => ({ t: p.bio }) },
-  { k: 'Tasten', f: (p) => ({ t: buttonsOf(p) }) },
-  { k: 'Anschluss', f: (p) => ({ t: p.port, sub: p.jack ? 'mit 3,5-mm-Klinke' : 'ohne Klinke' }) },
-  { k: 'Laden', f: (p) => ({ t: p.charge }) },
-  { k: 'Mobilfunk', f: (p) => ({ t: p.net }) },
-  { k: 'Wasserschutz', f: (p) => ({ t: p.ip }) },
-  { k: 'Material', f: (p) => ({ t: p.mat }) },
-  { k: 'Neu bei diesem Modell', feat: true },
+// Stärken eines Geräts im aktuellen Vergleich (für Beratung: "Was spricht für dieses Modell?")
+function strengths(ps, prices) {
+  const n = ps.length, out = ps.map(() => []);
+  if (n < 2) return out;
+  const pick = (vals, better, label, fmt) => {
+    const valid = vals.filter((v) => typeof v === 'number');
+    if (valid.length < 2 || new Set(valid).size < 2) return;
+    const best = better === 'low' ? Math.min(...valid) : Math.max(...valid);
+    const sorted = [...valid].sort((x, y) => (better === 'low' ? x - y : y - x));
+    const second = sorted.find((v) => v !== best);
+    vals.forEach((v, i) => { if (v === best) out[i].push(label + (fmt ? ` (${fmt(best, second)})` : '')); });
+  };
+  pick(ps.map((p) => (p.foldable ? p.diagInner : p.diag)), 'high', 'Größtes Display', (a, b) => `+${nf(a - b, 1)}″`);
+  pick(ps.map((p) => p.video), 'high', 'Längste Akkulaufzeit', (a, b) => `+${a - b} h Video`);
+  pick(ps.map((p) => p.g), 'low', 'Am leichtesten', (a, b) => `−${b - a} g`);
+  pick(ps.map((p) => (p.foldable ? p.dOpen : p.d)), 'low', 'Am dünnsten', (a, b) => `${mm(a)} mm`);
+  pick(prices, 'low', 'Günstigster Preis', (a, b) => `−${eurR(b - a)}`);
+  pick(ps.map((p) => p.camCount + (p.lidar ? 0.5 : 0)), 'high', 'Meiste Kameras', null);
+  pick(ps.map((p) => p.hz), 'high', 'ProMotion 120 Hz', null);
+  pick(ps.map((p) => p.year), 'high', 'Neuestes Modell', null);
+  pick(ps.map((p) => (/USB 3/.test(p.port) ? 2 : /USB-C/.test(p.port) ? 1 : 0)), 'high', 'Schnellster Anschluss', null);
+  pick(ps.map((p) => (p.foldable ? 1 : 0)), 'high', 'Faltbar – Tablet-Display', null);
+  return out;
+}
+
+const SECTIONS = [
+  ['Auf einen Blick', [
+    { k: 'Highlights', feat: true },
+    { k: 'Stärken im Vergleich', strengths: true },
+    { k: 'Preis', price: true },
+    { k: 'Speicher', f: (p) => ({ t: p.prices.map((x) => x[0]).join(' · ') }) },
+  ]],
+  ['Display & Größe', [
+    { k: 'Display', f: (p) => ({ t: p.foldable ? `${nf(p.diagInner, 1)}″ innen · ${nf(p.diag, 1)}″ außen` : `${nf(p.diag, 1)}″`, n: p.foldable ? p.diagInner : p.diag, sub: `${p.disp}${p.hz > 60 ? ` · ${p.hz} Hz` : ' · 60 Hz'}` }), better: 'high', bar: true },
+    { k: 'Maße (H × B × T)', f: (p) => ({ t: p.foldable ? `${mm(p.h)} × ${mm(p.w)} × ${mm(p.d)} mm zu` : `${mm(p.h)} × ${mm(p.w)} × ${mm(p.d)} mm`, sub: p.foldable ? `${mm(p.h)} × ${mm(p.wOpen)} × ${mm(p.dOpen)} mm aufgeklappt` : '' }) },
+    { k: 'Gewicht', f: (p) => ({ t: `${p.g} g`, n: p.g }), better: 'low', bar: true, unit: 'g' },
+    { k: 'Displayanteil Front', f: (p) => { const r = screenRatio(p); return { t: `≈ ${nf(r)} %`, n: r }; }, better: 'high', bar: true },
+    { k: 'Auflösung', f: (p) => ({ t: p.foldable ? `${p.resInner[0]} × ${p.resInner[1]} innen` : `${p.res[1]} × ${p.res[0]}`, n: p.foldable ? p.ppiInner : p.ppi, sub: p.foldable ? `${p.ppiInner} ppi innen · ${p.res[1]} × ${p.res[0]} außen` : `${p.ppi} ppi` }), better: 'high' },
+  ]],
+  ['Kamera, Leistung & Akku', [
+    { k: 'Kamera hinten', f: (p) => ({ t: p.cam, n: p.camCount + (p.lidar ? 0.5 : 0), sub: `${p.camCount} Objektiv${p.camCount > 1 ? 'e' : ''}${p.lidar ? ' + LiDAR' : ''}` }), better: 'high' },
+    { k: 'Chip', f: (p) => ({ t: p.chip }) },
+    { k: 'Akku (Video)', f: (p) => ({ t: p.video ? `bis zu ${p.video} h${p.videoOuter ? ` innen · ${p.videoOuter} h außen` : ''}` : '–', n: p.video, sub: p.video ? 'Videowiedergabe laut Apple' : '' }), better: 'high', bar: true, unit: 'h' },
+    { k: 'Laden', f: (p) => ({ t: p.charge }) },
+  ]],
+  ['Ausstattung', [
+    { k: 'Entsperren', f: (p) => ({ t: p.bio }) },
+    { k: 'Anschluss', f: (p) => ({ t: p.port, sub: p.jack ? 'mit 3,5-mm-Klinke' : 'ohne Klinke' }) },
+    { k: 'Mobilfunk', f: (p) => ({ t: p.net }) },
+    { k: 'Wasserschutz', f: (p) => ({ t: p.ip }) },
+    { k: 'Material', f: (p) => ({ t: p.mat }) },
+    { k: 'Tasten', f: (p) => ({ t: buttonsOf(p) }) },
+    { k: 'Marktstart', f: (p) => ({ t: p.launch }) },
+  ]],
 ];
 
 function renderTable() {
   const act = state.slots.slice(0, state.n);
   const ps = act.map((s) => byId(s.id));
-  let html = `<thead><tr><th></th>${ps.map((p, i) => `<th><span style="color:${SLOT_COLORS[i]}">${SLOT_LETTERS[i]}</span> · ${p.name}</th>`).join('')}</tr></thead><tbody>`;
-  for (const row of ROWS) {
-    html += `<tr><th>${row.k}</th>`;
-    if (row.price) {
-      const prs = act.map(priceOf);
-      const vals = prs.map((x) => (state.price === 'real' ? x.real : x.price));
-      const valid = vals.filter((v) => v != null);
-      const best = valid.length > 1 ? Math.min(...valid) : null;
-      const max = Math.max(...valid, 1);
-      prs.forEach((x, i) => {
-        const v = vals[i], p = ps[i];
-        let sub;
-        if (v == null) sub = p.priceNote || '';
-        else if (state.price === 'real') sub = `damals ${eur(x.price)} (${x.label}, ${p.year}) × ${nf(x.factor, 2)} Inflation`;
-        else sub = `${x.label}${p.priceNote ? ' · ' + p.priceNote : ''}`;
-        const main = v == null ? (p.prices[0][1] == null ? 'nur im Vertrag' : '–') : state.price === 'real' ? '≈ ' + eurR(v) : eur(v);
-        html += `<td class="${v != null && v === best ? 'best' : ''}"><div class="main">${main}</div><div class="sub">${sub}</div>${v != null ? `<div class="bar"><i style="width:${(v / max) * 100}%"></i></div>` : ''}</td>`;
-      });
-    } else if (row.feat) {
-      ps.forEach((p) => { html += `<td><ul>${p.feat.map((f) => `<li>${f}</li>`).join('')}</ul></td>`; });
-    } else {
-      const cells = ps.map((p) => row.f(p));
-      const nums = cells.map((c) => c.n).filter((n) => typeof n === 'number');
-      let best = null;
-      if (row.better && nums.length > 1 && new Set(nums).size > 1) best = row.better === 'low' ? Math.min(...nums) : Math.max(...nums);
-      const max = Math.max(...nums, 0.0001);
-      cells.forEach((c, i) => {
-        let delta = '';
-        if (row.unit && i > 0 && typeof c.n === 'number' && typeof cells[0].n === 'number' && c.n !== cells[0].n) {
-          const d = c.n - cells[0].n; delta = `<span class="delta">${d > 0 ? '+' : '−'}${nf(Math.abs(d))} ${row.unit} ggü. A</span>`;
-        }
-        html += `<td class="${best != null && c.n === best ? 'best' : ''}"><div class="main">${c.t}${delta}</div>${c.sub ? `<div class="sub">${c.sub}</div>` : ''}${row.bar && typeof c.n === 'number' ? `<div class="bar"><i style="width:${(c.n / max) * 100}%"></i></div>` : ''}</td>`;
-      });
+  const prs = act.map(priceOf);
+  const pvals = prs.map((x) => (state.price === 'real' ? x.real : x.price));
+  const str = strengths(ps, pvals);
+  const cols = ps.length + 1;
+  let html = `<thead><tr><th></th>${ps.map((p, i) => `<th><span class="dot" style="background:${SLOT_COLORS[i]}">${SLOT_LETTERS[i]}</span>${p.name}</th>`).join('')}</tr></thead><tbody>`;
+  for (const [title, rows] of SECTIONS) {
+    html += `<tr class="sec"><th colspan="${cols}">${title}</th></tr>`;
+    for (const row of rows) {
+      if (row.strengths && ps.length < 2) continue;
+      html += `<tr><th>${row.k}</th>`;
+      if (row.price) {
+        const valid = pvals.filter((v) => v != null);
+        const best = valid.length > 1 ? Math.min(...valid) : null;
+        const max = Math.max(...valid, 1);
+        prs.forEach((x, i) => {
+          const v = pvals[i], p = ps[i];
+          let sub;
+          if (v == null) sub = p.priceNote || '';
+          else if (state.price === 'real') sub = `damals ${eur(x.price)} (${x.label}, ${p.year}) × ${nf(x.factor, 2)} Inflation`;
+          else sub = `${x.label}${p.priceNote ? ' · ' + p.priceNote : ''}`;
+          const main = v == null ? (p.prices[0][1] == null ? 'nur im Vertrag' : '–') : state.price === 'real' ? '≈ ' + eurR(v) : eur(v);
+          html += `<td class="${v != null && v === best ? 'best' : ''}"><div class="main big">${main}</div><div class="sub">${sub}</div>${v != null ? `<div class="bar"><i style="width:${(v / max) * 100}%"></i></div>` : ''}</td>`;
+        });
+      } else if (row.feat) {
+        ps.forEach((p) => { html += `<td><div class="chips">${p.feat.map((f) => `<span class="chip">${f}</span>`).join('')}</div></td>`; });
+      } else if (row.strengths) {
+        str.forEach((list) => { html += `<td>${list.length ? `<ul class="plus">${list.map((x) => `<li>${x}</li>`).join('')}</ul>` : '<span class="sub">–</span>'}</td>`; });
+      } else {
+        const cells = ps.map((p) => row.f(p));
+        const nums = cells.map((c) => c.n).filter((n) => typeof n === 'number');
+        let best = null;
+        if (row.better && nums.length > 1 && new Set(nums).size > 1) best = row.better === 'low' ? Math.min(...nums) : Math.max(...nums);
+        const max = Math.max(...nums, 0.0001);
+        cells.forEach((c, i) => {
+          let delta = '';
+          if (row.unit && i > 0 && typeof c.n === 'number' && typeof cells[0].n === 'number' && c.n !== cells[0].n) {
+            const d = c.n - cells[0].n; delta = `<span class="delta">${d > 0 ? '+' : '−'}${nf(Math.abs(d))} ${row.unit} ggü. A</span>`;
+          }
+          html += `<td class="${best != null && c.n === best ? 'best' : ''}"><div class="main">${c.t}${delta}</div>${c.sub ? `<div class="sub">${c.sub}</div>` : ''}${row.bar && typeof c.n === 'number' ? `<div class="bar"><i style="width:${(c.n / max) * 100}%"></i></div>` : ''}</td>`;
+        });
+      }
+      html += '</tr>';
     }
-    html += '</tr>';
   }
   html += '</tbody>';
   $('#specTable').innerHTML = html;
   $('#priceNote').textContent = state.price === 'real'
-    ? `Inflationsbereinigt: Startpreis × (VPI ${VPI_NOW.label} ÷ VPI im Erscheinungsjahr), Verbraucherpreisindex Deutschland (Destatis). Grüne Werte = jeweils bester Wert im Vergleich.`
-    : 'Preise: deutsche Apple-UVP zum Marktstart für die gewählte Speichervariante. Grüne Werte = jeweils bester Wert im Vergleich.';
+    ? `Inflationsbereinigt: Startpreis × (VPI ${VPI_NOW.label} ÷ VPI im Erscheinungsjahr), Verbraucherpreisindex Deutschland (Destatis). Grün = bester Wert im Vergleich.`
+    : 'Preise: deutsche Apple-UVP zum Marktstart für die gewählte Speichervariante. Grün = bester Wert im Vergleich.';
 }
 
 // ---------------------------------------------------------------- UI: Toolbar
@@ -907,14 +992,28 @@ document.querySelectorAll('#priceSeg button').forEach((b) => b.addEventListener(
 document.querySelectorAll('#foldSeg button').forEach((b) => b.addEventListener('click', () => setFoldAll(+b.dataset.v)));
 $('#foldRange').addEventListener('input', (e) => setFoldAll(+e.target.value));
 $('#syncTog').addEventListener('change', (e) => { state.sync = e.target.checked; });
-$('#gridTog').addEventListener('change', (e) => { state.grid = e.target.checked; if (ruler) ruler.visible = state.grid; });
+$('#autoTog').addEventListener('change', (e) => setAuto(e.target.checked));
+function setAuto(on) {
+  state.auto = on; $('#autoTog').checked = on;
+  controls.autoRotate = on && isSingle();
+}
+// Präsentationsmodus: Bedienelemente ausblenden, Vollbild, Drehteller an
+function setPresent(on) {
+  document.body.classList.toggle('present', on);
+  if (on) { setSpecs(false); $('#help').hidden = true; setAuto(true); document.documentElement.requestFullscreen?.().catch(() => {}); }
+  else { setAuto(false); if (document.fullscreenElement) document.exitFullscreen?.(); }
+  setTimeout(() => setView(isSingle() ? 'three' : 'front'), 80);
+}
+$('#presentBtn').addEventListener('click', () => setPresent(true));
+$('#presentExit').addEventListener('click', () => setPresent(false));
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.body.classList.contains('present')) setPresent(false); });
 $('#resetBtn').addEventListener('click', () => setView('front'));
 const specsPanel = $('#specsPanel'), specsBtn = $('#specsBtn');
 const setSpecs = (open) => { specsPanel.hidden = !open; specsBtn.setAttribute('aria-expanded', String(open)); };
 specsBtn.addEventListener('click', () => setSpecs(specsPanel.hidden));
 $('#specsClose').addEventListener('click', () => setSpecs(false));
 $('#helpBtn').addEventListener('click', () => { $('#help').hidden = !$('#help').hidden; });
-window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { setSpecs(false); $('#help').hidden = true; } });
+window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { setSpecs(false); $('#help').hidden = true; } if (e.key === 'p' && !e.target.closest('select,input')) setPresent(!document.body.classList.contains('present')); });
 
 // ---------------------------------------------------------------- Start
 readHash();

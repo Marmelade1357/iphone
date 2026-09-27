@@ -29,7 +29,7 @@ const C = {
 export const PHONES = [
   // ---------------------------------------------------------------- 2007–2009
   {
-    id: 'iphone', style: 'orig', volStyle: 'rocker', name: 'iPhone', year: 2007, launch: 'Juni 2007 (DE: Nov. 2007)',
+    id: 'iphone', video: 7, style: 'orig', volStyle: 'rocker', name: 'iPhone', year: 2007, launch: 'Juni 2007 (DE: Nov. 2007)',
     h: 115, w: 61, d: 11.6, g: 135, diag: 3.5, res: [320, 480], ppi: 163, disp: 'LCD', hz: 60,
     chip: 'Samsung ARM11 (412 MHz)', cam: '2 MP', camLayout: 'single', camCount: 1,
     front: 'home', corner: 9, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'top', cc: false,
@@ -40,7 +40,7 @@ export const PHONES = [
     feat: ['Multi-Touch-Display', 'Visual Voicemail', 'Safari mit vollwertigem Web', 'Beschleunigungssensor fürs Drehen'],
   },
   {
-    id: '3g', style: 'g3', name: 'iPhone 3G', year: 2008, launch: 'Juli 2008',
+    id: '3g', video: 7, style: 'g3', name: 'iPhone 3G', year: 2008, launch: 'Juli 2008',
     h: 115.5, w: 62.1, d: 12.3, g: 133, diag: 3.5, res: [320, 480], ppi: 163, disp: 'LCD', hz: 60,
     chip: 'Samsung ARM11 (412 MHz)', cam: '2 MP', camLayout: 'single', camCount: 1,
     front: 'home', corner: 10, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'top', cc: false,
@@ -51,7 +51,7 @@ export const PHONES = [
     feat: ['App Store', '3G-Netz', 'GPS', 'Kunststoffrücken'],
   },
   {
-    id: '3gs', style: 'g3', name: 'iPhone 3GS', year: 2009, launch: 'Juni 2009',
+    id: '3gs', video: 10, style: 'g3', name: 'iPhone 3GS', year: 2009, launch: 'Juni 2009',
     h: 115.5, w: 62.1, d: 12.3, g: 135, diag: 3.5, res: [320, 480], ppi: 163, disp: 'LCD', hz: 60,
     chip: 'Samsung S5PC100 (600 MHz)', cam: '3 MP, Autofokus, Video', camLayout: 'single', camCount: 1,
     front: 'home', corner: 10, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'top', cc: false,
@@ -63,7 +63,7 @@ export const PHONES = [
   },
   // ---------------------------------------------------------------- 2010–2013
   {
-    id: '4', style: 'g4', volStyle: 'round', glassBack: false, name: 'iPhone 4', year: 2010, launch: 'Juni 2010',
+    id: '4', video: 10, style: 'g4', volStyle: 'round', glassBack: false, name: 'iPhone 4', year: 2010, launch: 'Juni 2010',
     h: 115.2, w: 58.6, d: 9.3, g: 137, diag: 3.5, res: [640, 960], ppi: 326, disp: 'LCD (IPS)', hz: 60,
     chip: 'Apple A4', cam: '5 MP + Blitz', camLayout: 'single', camCount: 1,
     front: 'home', corner: 8.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'top', cc: false,
@@ -74,7 +74,7 @@ export const PHONES = [
     feat: ['Retina-Display (326 ppi)', 'FaceTime & Frontkamera', 'Glas-Rückseite + Edelstahlrahmen', 'Gyroskop'],
   },
   {
-    id: '4s', style: 'g4', volStyle: 'round', glassBack: false, name: 'iPhone 4S', year: 2011, launch: 'Okt. 2011',
+    id: '4s', video: 10, style: 'g4', volStyle: 'round', glassBack: false, name: 'iPhone 4S', year: 2011, launch: 'Okt. 2011',
     h: 115.2, w: 58.6, d: 9.3, g: 140, diag: 3.5, res: [640, 960], ppi: 326, disp: 'LCD (IPS)', hz: 60,
     chip: 'Apple A5', cam: '8 MP, 1080p-Video', camLayout: 'single', camCount: 1,
     front: 'home', corner: 8.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'top', cc: false,
@@ -85,7 +85,7 @@ export const PHONES = [
     feat: ['Siri', '8-MP-Kamera', '1080p-Video', 'Dual-Core A5'],
   },
   {
-    id: '5', style: 'g5', volStyle: 'round', name: 'iPhone 5', year: 2012, launch: 'Sep. 2012',
+    id: '5', video: 10, style: 'g5', volStyle: 'round', name: 'iPhone 5', year: 2012, launch: 'Sep. 2012',
     h: 123.8, w: 58.6, d: 7.6, g: 112, diag: 4.0, res: [640, 1136], ppi: 326, disp: 'LCD (IPS)', hz: 60,
     chip: 'Apple A6', cam: '8 MP', camLayout: 'single', camCount: 1,
     front: 'home', corner: 9, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'top', cc: false,
@@ -96,7 +96,7 @@ export const PHONES = [
     feat: ['4-Zoll-Display', 'Lightning-Anschluss', 'LTE', 'Aluminium-Unibody'],
   },
   {
-    id: '5c', style: 'g5c', volStyle: 'round', name: 'iPhone 5c', year: 2013, launch: 'Sep. 2013',
+    id: '5c', video: 10, style: 'g5c', volStyle: 'round', name: 'iPhone 5c', year: 2013, launch: 'Sep. 2013',
     h: 124.4, w: 59.2, d: 8.97, g: 132, diag: 4.0, res: [640, 1136], ppi: 326, disp: 'LCD (IPS)', hz: 60,
     chip: 'Apple A6', cam: '8 MP', camLayout: 'single', camCount: 1,
     front: 'home', corner: 9.5, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'top', cc: false,
@@ -107,7 +107,7 @@ export const PHONES = [
     feat: ['Bunte Kunststoffgehäuse', 'Günstigeres Modell', 'Technik des iPhone 5'],
   },
   {
-    id: '5s', style: 'g5', volStyle: 'round', name: 'iPhone 5s', year: 2013, launch: 'Sep. 2013',
+    id: '5s', video: 10, style: 'g5', volStyle: 'round', name: 'iPhone 5s', year: 2013, launch: 'Sep. 2013',
     h: 123.8, w: 58.6, d: 7.6, g: 112, diag: 4.0, res: [640, 1136], ppi: 326, disp: 'LCD (IPS)', hz: 60,
     chip: 'Apple A7 (64-Bit)', cam: '8 MP, True Tone Blitz', camLayout: 'single', camCount: 1,
     front: 'home', homeRing: true, corner: 9, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'top', cc: false,
@@ -119,7 +119,7 @@ export const PHONES = [
   },
   // ---------------------------------------------------------------- 2014–2016
   {
-    id: '6', style: 'g6', name: 'iPhone 6', year: 2014, launch: 'Sep. 2014',
+    id: '6', video: 11, style: 'g6', name: 'iPhone 6', year: 2014, launch: 'Sep. 2014',
     h: 138.1, w: 67.0, d: 6.9, g: 129, diag: 4.7, res: [750, 1334], ppi: 326, disp: 'LCD (IPS)', hz: 60,
     chip: 'Apple A8', cam: '8 MP', camLayout: 'single', camCount: 1, bump: true,
     front: 'home', homeRing: true, corner: 10, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -130,7 +130,7 @@ export const PHONES = [
     feat: ['Größeres 4,7″-Display', 'Apple Pay (NFC)', 'Abgerundetes Design', 'Seitentaste rechts'],
   },
   {
-    id: '6plus', style: 'g6', name: 'iPhone 6 Plus', year: 2014, launch: 'Sep. 2014',
+    id: '6plus', video: 14, style: 'g6', name: 'iPhone 6 Plus', year: 2014, launch: 'Sep. 2014',
     h: 158.1, w: 77.8, d: 7.1, g: 172, diag: 5.5, res: [1080, 1920], ppi: 401, disp: 'LCD (IPS)', hz: 60,
     chip: 'Apple A8', cam: '8 MP mit OIS', camLayout: 'single', camCount: 1, bump: true,
     front: 'home', homeRing: true, corner: 11, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -141,7 +141,7 @@ export const PHONES = [
     feat: ['Erstes „Plus“-Modell (5,5″)', 'Optische Bildstabilisierung', 'Full-HD-Display', 'Apple Pay'],
   },
   {
-    id: '6s', style: 'g6', name: 'iPhone 6s', year: 2015, launch: 'Sep. 2015',
+    id: '6s', video: 11, style: 'g6', name: 'iPhone 6s', year: 2015, launch: 'Sep. 2015',
     h: 138.3, w: 67.1, d: 7.1, g: 143, diag: 4.7, res: [750, 1334], ppi: 326, disp: 'LCD (IPS)', hz: 60,
     chip: 'Apple A9', cam: '12 MP, 4K-Video', camLayout: 'single', camCount: 1, bump: true,
     front: 'home', homeRing: true, corner: 10, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -152,7 +152,7 @@ export const PHONES = [
     feat: ['3D Touch', 'Live Photos', '12-MP-Kamera + 4K', 'Roségold'],
   },
   {
-    id: '6splus', style: 'g6', name: 'iPhone 6s Plus', year: 2015, launch: 'Sep. 2015',
+    id: '6splus', video: 14, style: 'g6', name: 'iPhone 6s Plus', year: 2015, launch: 'Sep. 2015',
     h: 158.2, w: 77.9, d: 7.3, g: 192, diag: 5.5, res: [1080, 1920], ppi: 401, disp: 'LCD (IPS)', hz: 60,
     chip: 'Apple A9', cam: '12 MP mit OIS, 4K', camLayout: 'single', camCount: 1, bump: true,
     front: 'home', homeRing: true, corner: 11, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -163,7 +163,7 @@ export const PHONES = [
     feat: ['3D Touch', 'Live Photos', 'OIS auch für Video'],
   },
   {
-    id: 'se1', style: 'g5', volStyle: 'round', name: 'iPhone SE (1. Gen.)', year: 2016, launch: 'März 2016',
+    id: 'se1', video: 13, style: 'g5', volStyle: 'round', name: 'iPhone SE (1. Gen.)', year: 2016, launch: 'März 2016',
     h: 123.8, w: 58.6, d: 7.6, g: 113, diag: 4.0, res: [640, 1136], ppi: 326, disp: 'LCD (IPS)', hz: 60,
     chip: 'Apple A9', cam: '12 MP, 4K', camLayout: 'single', camCount: 1,
     front: 'home', homeRing: true, corner: 9, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'top', cc: false,
@@ -174,7 +174,7 @@ export const PHONES = [
     feat: ['5s-Gehäuse mit 6s-Technik', 'Kompakte 4 Zoll', 'Günstigster Einstieg'],
   },
   {
-    id: '7', style: 'g7', name: 'iPhone 7', year: 2016, launch: 'Sep. 2016',
+    id: '7', video: 13, style: 'g7', name: 'iPhone 7', year: 2016, launch: 'Sep. 2016',
     h: 138.3, w: 67.1, d: 7.1, g: 138, diag: 4.7, res: [750, 1334], ppi: 326, disp: 'LCD (IPS, P3)', hz: 60,
     chip: 'Apple A10 Fusion', cam: '12 MP mit OIS', camLayout: 'single', camCount: 1, bump: true,
     front: 'home', homeRing: true, corner: 10, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -185,7 +185,7 @@ export const PHONES = [
     feat: ['Kein Kopfhöreranschluss mehr', 'Wasserschutz IP67', 'Stereo-Lautsprecher', 'Taptic Home-Taste'],
   },
   {
-    id: '7plus', style: 'g7', name: 'iPhone 7 Plus', year: 2016, launch: 'Sep. 2016',
+    id: '7plus', video: 14, style: 'g7', name: 'iPhone 7 Plus', year: 2016, launch: 'Sep. 2016',
     h: 158.2, w: 77.9, d: 7.3, g: 188, diag: 5.5, res: [1080, 1920], ppi: 401, disp: 'LCD (IPS, P3)', hz: 60,
     chip: 'Apple A10 Fusion', cam: '12 MP Weitwinkel + 12 MP Tele (2×)', camLayout: 'dual-h', camCount: 2, bump: true,
     front: 'home', homeRing: true, corner: 11, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -197,7 +197,7 @@ export const PHONES = [
   },
   // ---------------------------------------------------------------- 2017–2019
   {
-    id: '8', name: 'iPhone 8', year: 2017, launch: 'Sep. 2017',
+    id: '8', video: 13, name: 'iPhone 8', year: 2017, launch: 'Sep. 2017',
     h: 138.4, w: 67.3, d: 7.3, g: 148, diag: 4.7, res: [750, 1334], ppi: 326, disp: 'LCD (True Tone)', hz: 60,
     chip: 'Apple A11 Bionic', cam: '12 MP mit OIS', camLayout: 'single', camCount: 1, bump: true,
     front: 'home', homeRing: true, corner: 10, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -208,7 +208,7 @@ export const PHONES = [
     feat: ['Kabelloses Laden (Qi)', 'Glasrückseite', 'True Tone', 'Schnellladen'],
   },
   {
-    id: '8plus', name: 'iPhone 8 Plus', year: 2017, launch: 'Sep. 2017',
+    id: '8plus', video: 14, name: 'iPhone 8 Plus', year: 2017, launch: 'Sep. 2017',
     h: 158.4, w: 78.1, d: 7.5, g: 202, diag: 5.5, res: [1080, 1920], ppi: 401, disp: 'LCD (True Tone)', hz: 60,
     chip: 'Apple A11 Bionic', cam: '12 MP Weitwinkel + 12 MP Tele', camLayout: 'dual-h', camCount: 2, bump: true,
     front: 'home', homeRing: true, corner: 11, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -219,7 +219,7 @@ export const PHONES = [
     feat: ['Porträtlicht', 'Kabelloses Laden', 'Dual-Kamera'],
   },
   {
-    id: 'x', name: 'iPhone X', year: 2017, launch: 'Nov. 2017',
+    id: 'x', video: 13, name: 'iPhone X', year: 2017, launch: 'Nov. 2017',
     h: 143.6, w: 70.9, d: 7.7, g: 174, diag: 5.8, res: [1125, 2436], ppi: 458, disp: 'OLED', hz: 60,
     chip: 'Apple A11 Bionic', cam: '12 MP Weitwinkel + 12 MP Tele', camLayout: 'dual-v', camCount: 2, bump: true,
     front: 'notch', corner: 10.5, screenCorner: 8.5, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -230,7 +230,7 @@ export const PHONES = [
     feat: ['Face ID', 'Randloses OLED mit Notch', 'Keine Home-Taste mehr', 'Animojis'],
   },
   {
-    id: 'xr', name: 'iPhone XR', year: 2018, launch: 'Okt. 2018',
+    id: 'xr', video: 16, name: 'iPhone XR', year: 2018, launch: 'Okt. 2018',
     h: 150.9, w: 75.7, d: 8.3, g: 194, diag: 6.1, res: [828, 1792], ppi: 326, disp: 'LCD (Liquid Retina)', hz: 60,
     chip: 'Apple A12 Bionic', cam: '12 MP', camLayout: 'single', camCount: 1, bump: true,
     front: 'notch', corner: 11.5, screenCorner: 9, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -241,7 +241,7 @@ export const PHONES = [
     feat: ['Face ID zum günstigeren Preis', '6,1″ Liquid Retina (LCD)', 'Sechs Farben'],
   },
   {
-    id: 'xs', name: 'iPhone XS', year: 2018, launch: 'Sep. 2018',
+    id: 'xs', video: 14, name: 'iPhone XS', year: 2018, launch: 'Sep. 2018',
     h: 143.6, w: 70.9, d: 7.7, g: 177, diag: 5.8, res: [1125, 2436], ppi: 458, disp: 'OLED', hz: 60,
     chip: 'Apple A12 Bionic', cam: '12 MP Weitwinkel + 12 MP Tele', camLayout: 'dual-v', camCount: 2, bump: true,
     front: 'notch', corner: 10.5, screenCorner: 8.5, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -252,7 +252,7 @@ export const PHONES = [
     feat: ['Smart HDR', 'Dual-SIM (eSIM)', 'IP68', 'Tiefenschärfe nachträglich einstellbar'],
   },
   {
-    id: 'xsmax', name: 'iPhone XS Max', year: 2018, launch: 'Sep. 2018',
+    id: 'xsmax', video: 15, name: 'iPhone XS Max', year: 2018, launch: 'Sep. 2018',
     h: 157.5, w: 77.4, d: 7.7, g: 208, diag: 6.5, res: [1242, 2688], ppi: 458, disp: 'OLED', hz: 60,
     chip: 'Apple A12 Bionic', cam: '12 MP Weitwinkel + 12 MP Tele', camLayout: 'dual-v', camCount: 2, bump: true,
     front: 'notch', corner: 11.5, screenCorner: 9.5, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -263,7 +263,7 @@ export const PHONES = [
     feat: ['Erstes großes Face-ID-Modell (6,5″)', 'Smart HDR', 'Dual-SIM'],
   },
   {
-    id: '11', name: 'iPhone 11', year: 2019, launch: 'Sep. 2019',
+    id: '11', video: 17, name: 'iPhone 11', year: 2019, launch: 'Sep. 2019',
     h: 150.9, w: 75.7, d: 8.3, g: 194, diag: 6.1, res: [828, 1792], ppi: 326, disp: 'LCD (Liquid Retina)', hz: 60,
     chip: 'Apple A13 Bionic', cam: '12 MP Weitwinkel + 12 MP Ultraweitwinkel', camLayout: 'dual-sq', camCount: 2, bump: true,
     front: 'notch', corner: 11.5, screenCorner: 9, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -274,7 +274,7 @@ export const PHONES = [
     feat: ['Ultraweitwinkel', 'Nachtmodus', 'QuickTake-Video', 'Quadratisches Kameramodul'],
   },
   {
-    id: '11pro', name: 'iPhone 11 Pro', year: 2019, launch: 'Sep. 2019',
+    id: '11pro', video: 18, name: 'iPhone 11 Pro', year: 2019, launch: 'Sep. 2019',
     h: 144.0, w: 71.4, d: 8.1, g: 188, diag: 5.8, res: [1125, 2436], ppi: 458, disp: 'OLED (XDR)', hz: 60,
     chip: 'Apple A13 Bionic', cam: '3 × 12 MP (Weit, Ultraweit, 2× Tele)', camLayout: 'triple-sq', camCount: 3, bump: true,
     front: 'notch', corner: 10.5, screenCorner: 8.5, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -285,7 +285,7 @@ export const PHONES = [
     feat: ['Erste Triple-Kamera', 'Super Retina XDR', 'Mattes Glas', '18-W-Schnellladegerät beiliegend'],
   },
   {
-    id: '11promax', name: 'iPhone 11 Pro Max', year: 2019, launch: 'Sep. 2019',
+    id: '11promax', video: 20, name: 'iPhone 11 Pro Max', year: 2019, launch: 'Sep. 2019',
     h: 158.0, w: 77.8, d: 8.1, g: 226, diag: 6.5, res: [1242, 2688], ppi: 458, disp: 'OLED (XDR)', hz: 60,
     chip: 'Apple A13 Bionic', cam: '3 × 12 MP (Weit, Ultraweit, 2× Tele)', camLayout: 'triple-sq', camCount: 3, bump: true,
     front: 'notch', corner: 11.5, screenCorner: 9.5, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -297,7 +297,7 @@ export const PHONES = [
   },
   // ---------------------------------------------------------------- 2020–2021
   {
-    id: 'se2', name: 'iPhone SE (2. Gen.)', year: 2020, launch: 'Apr. 2020',
+    id: 'se2', video: 13, name: 'iPhone SE (2. Gen.)', year: 2020, launch: 'Apr. 2020',
     h: 138.4, w: 67.3, d: 7.3, g: 148, diag: 4.7, res: [750, 1334], ppi: 326, disp: 'LCD (True Tone)', hz: 60,
     chip: 'Apple A13 Bionic', cam: '12 MP', camLayout: 'single', camCount: 1, bump: true,
     front: 'home', homeRing: true, corner: 10, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -308,7 +308,7 @@ export const PHONES = [
     feat: ['iPhone-8-Gehäuse mit A13', 'Günstigster Einstieg', 'Schwarze Front bei allen Farben'],
   },
   {
-    id: '12mini', name: 'iPhone 12 mini', year: 2020, launch: 'Nov. 2020',
+    id: '12mini', video: 15, name: 'iPhone 12 mini', year: 2020, launch: 'Nov. 2020',
     h: 131.5, w: 64.2, d: 7.4, g: 133, diag: 5.4, res: [1080, 2340], ppi: 476, disp: 'OLED', hz: 60,
     chip: 'Apple A14 Bionic', cam: '12 MP Weit + 12 MP Ultraweit', camLayout: 'dual-sq', camCount: 2, bump: true,
     front: 'notch', corner: 9.5, screenCorner: 7.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -319,7 +319,7 @@ export const PHONES = [
     feat: ['Kleinstes 5G-iPhone', 'MagSafe', 'Ceramic Shield', 'Flache Kanten'],
   },
   {
-    id: '12', name: 'iPhone 12', year: 2020, launch: 'Okt. 2020',
+    id: '12', video: 17, name: 'iPhone 12', year: 2020, launch: 'Okt. 2020',
     h: 146.7, w: 71.5, d: 7.4, g: 164, diag: 6.1, res: [1170, 2532], ppi: 460, disp: 'OLED', hz: 60,
     chip: 'Apple A14 Bionic', cam: '12 MP Weit + 12 MP Ultraweit', camLayout: 'dual-sq', camCount: 2, bump: true,
     front: 'notch', corner: 10.5, screenCorner: 8.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -330,8 +330,8 @@ export const PHONES = [
     feat: ['5G', 'MagSafe', 'OLED jetzt auch im Standardmodell', 'Kein Netzteil mehr im Karton'],
   },
   {
-    id: '12pro', name: 'iPhone 12 Pro', year: 2020, launch: 'Okt. 2020',
-    h: 146.7, w: 71.5, d: 7.4, g: 189, diag: 6.1, res: [1170, 2532], ppi: 460, disp: 'OLED (XDR)', hz: 60,
+    id: '12pro', video: 17, name: 'iPhone 12 Pro', year: 2020, launch: 'Okt. 2020',
+    h: 146.7, w: 71.5, d: 7.4, g: 187, diag: 6.1, res: [1170, 2532], ppi: 460, disp: 'OLED (XDR)', hz: 60,
     chip: 'Apple A14 Bionic', cam: '3 × 12 MP + LiDAR', camLayout: 'triple-sq', camCount: 3, lidar: true, bump: true,
     front: 'notch', corner: 10.5, screenCorner: 8.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
     port: 'Lightning', jack: null, bio: 'Face ID', ip: 'IP68', mat: 'Mattglas / Edelstahl',
@@ -341,8 +341,8 @@ export const PHONES = [
     feat: ['LiDAR-Scanner', 'Apple ProRAW', 'Dolby-Vision-HDR-Video', '5G'],
   },
   {
-    id: '12promax', name: 'iPhone 12 Pro Max', year: 2020, launch: 'Nov. 2020',
-    h: 160.8, w: 78.1, d: 7.4, g: 228, diag: 6.7, res: [1284, 2778], ppi: 458, disp: 'OLED (XDR)', hz: 60,
+    id: '12promax', video: 20, name: 'iPhone 12 Pro Max', year: 2020, launch: 'Nov. 2020',
+    h: 160.8, w: 78.1, d: 7.4, g: 226, diag: 6.7, res: [1284, 2778], ppi: 458, disp: 'OLED (XDR)', hz: 60,
     chip: 'Apple A14 Bionic', cam: '3 × 12 MP (2,5× Tele) + LiDAR', camLayout: 'triple-sq', camCount: 3, lidar: true, bump: true,
     front: 'notch', corner: 11.5, screenCorner: 9.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
     port: 'Lightning', jack: null, bio: 'Face ID', ip: 'IP68', mat: 'Mattglas / Edelstahl',
@@ -352,7 +352,7 @@ export const PHONES = [
     feat: ['Sensor-Shift-Stabilisierung', 'Größerer Hauptsensor', 'LiDAR', '6,7″'],
   },
   {
-    id: '13mini', name: 'iPhone 13 mini', year: 2021, launch: 'Sep. 2021',
+    id: '13mini', video: 17, name: 'iPhone 13 mini', year: 2021, launch: 'Sep. 2021',
     h: 131.5, w: 64.2, d: 7.65, g: 140, diag: 5.4, res: [1080, 2340], ppi: 476, disp: 'OLED', hz: 60,
     chip: 'Apple A15 Bionic', cam: '12 MP Weit + 12 MP Ultraweit', camLayout: 'dual-diag', camCount: 2, bump: true,
     front: 'notch13', corner: 9.5, screenCorner: 7.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -363,7 +363,7 @@ export const PHONES = [
     feat: ['Kinomodus', 'Kleinere Notch', 'Diagonale Kameras', 'Letztes mini-Modell'],
   },
   {
-    id: '13', name: 'iPhone 13', year: 2021, launch: 'Sep. 2021',
+    id: '13', video: 19, name: 'iPhone 13', year: 2021, launch: 'Sep. 2021',
     h: 146.7, w: 71.5, d: 7.65, g: 173, diag: 6.1, res: [1170, 2532], ppi: 460, disp: 'OLED', hz: 60,
     chip: 'Apple A15 Bionic', cam: '12 MP Weit + 12 MP Ultraweit', camLayout: 'dual-diag', camCount: 2, bump: true,
     front: 'notch13', corner: 10.5, screenCorner: 8.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -374,7 +374,7 @@ export const PHONES = [
     feat: ['Kinomodus', 'Sensor-Shift-OIS', '128 GB Basisspeicher', 'Kleinere Notch'],
   },
   {
-    id: '13pro', name: 'iPhone 13 Pro', year: 2021, launch: 'Sep. 2021',
+    id: '13pro', video: 22, name: 'iPhone 13 Pro', year: 2021, launch: 'Sep. 2021',
     h: 146.7, w: 71.5, d: 7.65, g: 203, diag: 6.1, res: [1170, 2532], ppi: 460, disp: 'OLED (ProMotion)', hz: 120,
     chip: 'Apple A15 Bionic', cam: '3 × 12 MP (3× Tele) + LiDAR', camLayout: 'triple-sq', camCount: 3, lidar: true, bump: true, bigBump: true,
     front: 'notch13', corner: 10.5, screenCorner: 8.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -385,7 +385,7 @@ export const PHONES = [
     feat: ['ProMotion 120 Hz', 'Makrofotografie', 'ProRes-Video', '1 TB Speicher'],
   },
   {
-    id: '13promax', name: 'iPhone 13 Pro Max', year: 2021, launch: 'Sep. 2021',
+    id: '13promax', video: 28, name: 'iPhone 13 Pro Max', year: 2021, launch: 'Sep. 2021',
     h: 160.8, w: 78.1, d: 7.65, g: 238, diag: 6.7, res: [1284, 2778], ppi: 458, disp: 'OLED (ProMotion)', hz: 120,
     chip: 'Apple A15 Bionic', cam: '3 × 12 MP (3× Tele) + LiDAR', camLayout: 'triple-sq', camCount: 3, lidar: true, bump: true, bigBump: true,
     front: 'notch13', corner: 11.5, screenCorner: 9.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -397,7 +397,7 @@ export const PHONES = [
   },
   // ---------------------------------------------------------------- 2022–2023
   {
-    id: 'se3', name: 'iPhone SE (3. Gen.)', year: 2022, launch: 'März 2022',
+    id: 'se3', video: 15, name: 'iPhone SE (3. Gen.)', year: 2022, launch: 'März 2022',
     h: 138.4, w: 67.3, d: 7.3, g: 144, diag: 4.7, res: [750, 1334], ppi: 326, disp: 'LCD (True Tone)', hz: 60,
     chip: 'Apple A15 Bionic', cam: '12 MP', camLayout: 'single', camCount: 1, bump: true,
     front: 'home', homeRing: true, corner: 10, edge: 'curved', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -408,7 +408,7 @@ export const PHONES = [
     feat: ['5G', 'A15 Bionic', 'Letztes iPhone mit Home-Taste'],
   },
   {
-    id: '14', name: 'iPhone 14', year: 2022, launch: 'Sep. 2022',
+    id: '14', video: 20, name: 'iPhone 14', year: 2022, launch: 'Sep. 2022',
     h: 146.7, w: 71.5, d: 7.8, g: 172, diag: 6.1, res: [1170, 2532], ppi: 460, disp: 'OLED', hz: 60,
     chip: 'Apple A15 Bionic (5-Kern-GPU)', cam: '12 MP Weit + 12 MP Ultraweit', camLayout: 'dual-diag', camCount: 2, bump: true,
     front: 'notch13', corner: 10.5, screenCorner: 8.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -419,7 +419,7 @@ export const PHONES = [
     feat: ['Notruf SOS via Satellit', 'Unfallerkennung', 'Action-Modus (Video)', 'Photonic Engine'],
   },
   {
-    id: '14plus', name: 'iPhone 14 Plus', year: 2022, launch: 'Okt. 2022',
+    id: '14plus', video: 26, name: 'iPhone 14 Plus', year: 2022, launch: 'Okt. 2022',
     h: 160.8, w: 78.1, d: 7.8, g: 203, diag: 6.7, res: [1284, 2778], ppi: 458, disp: 'OLED', hz: 60,
     chip: 'Apple A15 Bionic (5-Kern-GPU)', cam: '12 MP Weit + 12 MP Ultraweit', camLayout: 'dual-diag', camCount: 2, bump: true,
     front: 'notch13', corner: 11.5, screenCorner: 9.5, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -430,7 +430,7 @@ export const PHONES = [
     feat: ['Rückkehr des „Plus“ (6,7″)', 'Satelliten-Notruf', 'Unfallerkennung'],
   },
   {
-    id: '14pro', name: 'iPhone 14 Pro', year: 2022, launch: 'Sep. 2022',
+    id: '14pro', video: 23, name: 'iPhone 14 Pro', year: 2022, launch: 'Sep. 2022',
     h: 147.5, w: 71.5, d: 7.85, g: 206, diag: 6.1, res: [1179, 2556], ppi: 460, disp: 'OLED (ProMotion, Always-On)', hz: 120,
     chip: 'Apple A16 Bionic', cam: '48 MP Haupt + 12 MP Ultraweit + 12 MP 3× Tele', camLayout: 'triple-sq', camCount: 3, lidar: true, bump: true, bigBump: true,
     front: 'island', corner: 11, screenCorner: 9, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -441,7 +441,7 @@ export const PHONES = [
     feat: ['Dynamic Island', 'Always-On-Display', '48-MP-Hauptkamera', 'Satelliten-Notruf'],
   },
   {
-    id: '14promax', name: 'iPhone 14 Pro Max', year: 2022, launch: 'Sep. 2022',
+    id: '14promax', video: 29, name: 'iPhone 14 Pro Max', year: 2022, launch: 'Sep. 2022',
     h: 160.7, w: 77.6, d: 7.85, g: 240, diag: 6.7, res: [1290, 2796], ppi: 460, disp: 'OLED (ProMotion, Always-On)', hz: 120,
     chip: 'Apple A16 Bionic', cam: '48 MP Haupt + 12 MP Ultraweit + 12 MP 3× Tele', camLayout: 'triple-sq', camCount: 3, lidar: true, bump: true, bigBump: true,
     front: 'island', corner: 12, screenCorner: 10, edge: 'flat', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -452,7 +452,7 @@ export const PHONES = [
     feat: ['Dynamic Island', 'Always-On', '48 MP', '2000 Nits Spitzenhelligkeit'],
   },
   {
-    id: '15', name: 'iPhone 15', year: 2023, launch: 'Sep. 2023',
+    id: '15', video: 20, name: 'iPhone 15', year: 2023, launch: 'Sep. 2023',
     h: 147.6, w: 71.6, d: 7.8, g: 171, diag: 6.1, res: [1179, 2556], ppi: 460, disp: 'OLED', hz: 60,
     chip: 'Apple A16 Bionic', cam: '48 MP Haupt + 12 MP Ultraweit', camLayout: 'dual-diag', camCount: 2, bump: true,
     front: 'island', corner: 11, screenCorner: 9, edge: 'soft', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -463,7 +463,7 @@ export const PHONES = [
     feat: ['USB-C', 'Dynamic Island im Standardmodell', '48-MP-Kamera', 'Durchgefärbtes Glas'],
   },
   {
-    id: '15plus', name: 'iPhone 15 Plus', year: 2023, launch: 'Sep. 2023',
+    id: '15plus', video: 26, name: 'iPhone 15 Plus', year: 2023, launch: 'Sep. 2023',
     h: 160.9, w: 77.8, d: 7.8, g: 201, diag: 6.7, res: [1290, 2796], ppi: 460, disp: 'OLED', hz: 60,
     chip: 'Apple A16 Bionic', cam: '48 MP Haupt + 12 MP Ultraweit', camLayout: 'dual-diag', camCount: 2, bump: true,
     front: 'island', corner: 12, screenCorner: 10, edge: 'soft', sw: 'mute', vol: 'left', pwr: 'right', cc: false,
@@ -474,7 +474,7 @@ export const PHONES = [
     feat: ['USB-C', 'Dynamic Island', '48 MP'],
   },
   {
-    id: '15pro', name: 'iPhone 15 Pro', year: 2023, launch: 'Sep. 2023',
+    id: '15pro', video: 23, name: 'iPhone 15 Pro', year: 2023, launch: 'Sep. 2023',
     h: 146.6, w: 70.6, d: 8.25, g: 187, diag: 6.1, res: [1179, 2556], ppi: 460, disp: 'OLED (ProMotion, Always-On)', hz: 120,
     chip: 'Apple A17 Pro (3 nm)', cam: '48 MP Haupt + 12 MP Ultraweit + 12 MP 3× Tele', camLayout: 'triple-sq', camCount: 3, lidar: true, bump: true, bigBump: true,
     front: 'island', corner: 11, screenCorner: 9.5, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: false,
@@ -485,7 +485,7 @@ export const PHONES = [
     feat: ['Titanrahmen', 'Action-Taste statt Stummschalter', 'USB 3', 'Hardware-Raytracing'],
   },
   {
-    id: '15promax', name: 'iPhone 15 Pro Max', year: 2023, launch: 'Sep. 2023',
+    id: '15promax', video: 29, name: 'iPhone 15 Pro Max', year: 2023, launch: 'Sep. 2023',
     h: 159.9, w: 76.7, d: 8.25, g: 221, diag: 6.7, res: [1290, 2796], ppi: 460, disp: 'OLED (ProMotion, Always-On)', hz: 120,
     chip: 'Apple A17 Pro (3 nm)', cam: '48 MP Haupt + 12 MP Ultraweit + 12 MP 5× Tetraprisma', camLayout: 'triple-sq', camCount: 3, lidar: true, bump: true, bigBump: true,
     front: 'island', corner: 12, screenCorner: 10.5, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: false,
@@ -497,7 +497,7 @@ export const PHONES = [
   },
   // ---------------------------------------------------------------- 2024–2025
   {
-    id: '16', name: 'iPhone 16', year: 2024, launch: 'Sep. 2024',
+    id: '16', video: 22, name: 'iPhone 16', year: 2024, launch: 'Sep. 2024',
     h: 147.6, w: 71.6, d: 7.8, g: 170, diag: 6.1, res: [1179, 2556], ppi: 460, disp: 'OLED', hz: 60,
     chip: 'Apple A18', cam: '48 MP Fusion + 12 MP Ultraweit', camLayout: 'pill-v', camCount: 2, bump: true,
     front: 'island', corner: 11, screenCorner: 9, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
@@ -508,7 +508,7 @@ export const PHONES = [
     feat: ['Kamerasteuerung', 'Action-Taste', 'Apple Intelligence', 'Räumliche Fotos & Videos'],
   },
   {
-    id: '16plus', name: 'iPhone 16 Plus', year: 2024, launch: 'Sep. 2024',
+    id: '16plus', video: 27, name: 'iPhone 16 Plus', year: 2024, launch: 'Sep. 2024',
     h: 160.9, w: 77.8, d: 7.8, g: 199, diag: 6.7, res: [1290, 2796], ppi: 460, disp: 'OLED', hz: 60,
     chip: 'Apple A18', cam: '48 MP Fusion + 12 MP Ultraweit', camLayout: 'pill-v', camCount: 2, bump: true,
     front: 'island', corner: 12, screenCorner: 10, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
@@ -519,7 +519,7 @@ export const PHONES = [
     feat: ['Kamerasteuerung', 'Action-Taste', 'Apple Intelligence'],
   },
   {
-    id: '16pro', bezel: 2.55, name: 'iPhone 16 Pro', year: 2024, launch: 'Sep. 2024',
+    id: '16pro', video: 27, bezel: 2.55, name: 'iPhone 16 Pro', year: 2024, launch: 'Sep. 2024',
     h: 149.6, w: 71.5, d: 8.25, g: 199, diag: 6.3, res: [1206, 2622], ppi: 460, disp: 'OLED (ProMotion, Always-On)', hz: 120,
     chip: 'Apple A18 Pro', cam: '48 MP Fusion + 48 MP Ultraweit + 12 MP 5× Tele', camLayout: 'triple-sq', camCount: 3, lidar: true, bump: true, bigBump: true,
     front: 'island', corner: 11.5, screenCorner: 10, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
@@ -530,7 +530,7 @@ export const PHONES = [
     feat: ['Größeres 6,3″-Display', 'Dünnste Ränder bisher', '4K120 Dolby Vision', 'Kamerasteuerung'],
   },
   {
-    id: '16promax', bezel: 2.55, name: 'iPhone 16 Pro Max', year: 2024, launch: 'Sep. 2024',
+    id: '16promax', video: 33, bezel: 2.55, name: 'iPhone 16 Pro Max', year: 2024, launch: 'Sep. 2024',
     h: 163.0, w: 77.6, d: 8.25, g: 227, diag: 6.9, res: [1320, 2868], ppi: 460, disp: 'OLED (ProMotion, Always-On)', hz: 120,
     chip: 'Apple A18 Pro', cam: '48 MP Fusion + 48 MP Ultraweit + 12 MP 5× Tele', camLayout: 'triple-sq', camCount: 3, lidar: true, bump: true, bigBump: true,
     front: 'island', corner: 12.5, screenCorner: 11, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
@@ -541,7 +541,7 @@ export const PHONES = [
     feat: ['Größtes iPhone-Display bis dahin (6,9″)', '4K120', 'Kamerasteuerung'],
   },
   {
-    id: '16e', name: 'iPhone 16e', year: 2025, launch: 'Feb. 2025',
+    id: '16e', video: 26, name: 'iPhone 16e', year: 2025, launch: 'Feb. 2025',
     h: 146.7, w: 71.5, d: 7.8, g: 167, diag: 6.1, res: [1170, 2532], ppi: 460, disp: 'OLED', hz: 60,
     chip: 'Apple A18 (4-Kern-GPU)', cam: '48 MP Fusion (2× Zoom)', camLayout: 'single-flat', camCount: 1, bump: true,
     front: 'notch13', corner: 10.5, screenCorner: 8.5, edge: 'flat', sw: 'action', vol: 'left', pwr: 'right', cc: false,
@@ -552,7 +552,7 @@ export const PHONES = [
     feat: ['Erstes Apple-Modem (C1)', 'Apple Intelligence', 'Action-Taste', 'Ersetzt die SE-Reihe'],
   },
   {
-    id: '17', bezel: 2.64, name: 'iPhone 17', year: 2025, launch: 'Sep. 2025',
+    id: '17', video: 30, bezel: 2.64, name: 'iPhone 17', year: 2025, launch: 'Sep. 2025',
     h: 149.6, w: 71.5, d: 7.95, g: 177, diag: 6.3, res: [1206, 2622], ppi: 460, disp: 'OLED (ProMotion, Always-On)', hz: 120,
     chip: 'Apple A19', cam: '48 MP Fusion + 48 MP Ultraweit', camLayout: 'pill-v', camCount: 2, bump: true,
     front: 'island', corner: 11.5, screenCorner: 10, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
@@ -563,7 +563,7 @@ export const PHONES = [
     feat: ['ProMotion 120 Hz im Standardmodell', 'Always-On', '18-MP-Center-Stage-Frontkamera', '256 GB Basisspeicher'],
   },
   {
-    id: 'air', bezel: 2.58, name: 'iPhone Air', year: 2025, launch: 'Sep. 2025',
+    id: 'air', video: 27, bezel: 2.58, name: 'iPhone Air', year: 2025, launch: 'Sep. 2025',
     h: 156.2, w: 74.7, d: 5.64, g: 165, diag: 6.5, res: [1260, 2736], ppi: 460, disp: 'OLED (ProMotion, Always-On)', hz: 120,
     chip: 'Apple A19 Pro', cam: '48 MP Fusion (2× Zoom)', camLayout: 'air-bar', camCount: 1, bump: true,
     front: 'island', corner: 12, screenCorner: 10.5, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
@@ -574,7 +574,7 @@ export const PHONES = [
     feat: ['Dünnstes iPhone: 5,64 mm', 'Kamera-Plateau', 'Nur eSIM', 'Apple N1 + C1X'],
   },
   {
-    id: '17pro', bezel: 2.64, name: 'iPhone 17 Pro', year: 2025, launch: 'Sep. 2025',
+    id: '17pro', video: 31, bezel: 2.64, name: 'iPhone 17 Pro', year: 2025, launch: 'Sep. 2025',
     h: 150.0, w: 71.9, d: 8.75, g: 204, diag: 6.3, res: [1206, 2622], ppi: 460, disp: 'OLED (ProMotion, Always-On)', hz: 120,
     chip: 'Apple A19 Pro', cam: '3 × 48 MP (Fusion, Ultraweit, 4× Tele)', camLayout: 'pro-plateau', camCount: 3, lidar: true, bump: true,
     front: 'island', corner: 12, screenCorner: 10, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
@@ -585,7 +585,7 @@ export const PHONES = [
     feat: ['Aluminium-Unibody', 'Vapor Chamber', 'Kamera-Plateau über die volle Breite', '8× optische Qualität'],
   },
   {
-    id: '17promax', bezel: 2.64, name: 'iPhone 17 Pro Max', year: 2025, launch: 'Sep. 2025',
+    id: '17promax', video: 37, bezel: 2.64, name: 'iPhone 17 Pro Max', year: 2025, launch: 'Sep. 2025',
     h: 163.4, w: 78.0, d: 8.75, g: 231, diag: 6.9, res: [1320, 2868], ppi: 460, disp: 'OLED (ProMotion, Always-On)', hz: 120,
     chip: 'Apple A19 Pro', cam: '3 × 48 MP (Fusion, Ultraweit, 4× Tele)', camLayout: 'pro-plateau', camCount: 3, lidar: true, bump: true,
     front: 'island', corner: 13, screenCorner: 11, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
@@ -597,18 +597,18 @@ export const PHONES = [
   },
   // ---------------------------------------------------------------- 2026
   {
-    id: '17e', name: 'iPhone 17e', year: 2026, launch: 'März 2026',
+    id: '17e', video: 26, name: 'iPhone 17e', year: 2026, launch: 'März 2026',
     h: 146.7, w: 71.5, d: 7.8, g: 169, diag: 6.1, res: [1170, 2532], ppi: 460, disp: 'OLED', hz: 60,
     chip: 'Apple A19 (4-Kern-GPU)', cam: '48 MP Fusion (2× Zoom)', camLayout: 'single-flat', camCount: 1, bump: true,
     front: 'notch13', corner: 10.5, screenCorner: 8.5, edge: 'flat', sw: 'action', vol: 'left', pwr: 'right', cc: false,
     port: 'USB-C (USB 2)', jack: null, bio: 'Face ID', ip: 'IP68', mat: 'Glas / Aluminium',
     charge: 'MagSafe, Qi2', net: '5G (Apple C1X)', glassBack: true,
     prices: [['256 GB', 699], ['512 GB', 949]], priceNote: 'Seit Sep. 2026 von Apple auf 849 € (256 GB) angehoben.',
-    colors: [C.black, ['Weiß', '#f5f5f3']],
+    colors: [C.black, ['Weiß', '#f5f5f3'], ['Zartrosa', '#f3d6d9']],
     feat: ['Jetzt mit MagSafe', 'Ceramic Shield 2', 'A19-Chip', '256 GB Basisspeicher'],
   },
   {
-    id: '18pro', bezel: 2.64, name: 'iPhone 18 Pro', year: 2026, launch: 'Sep. 2026',
+    id: '18pro', video: 36, bezel: 2.64, name: 'iPhone 18 Pro', year: 2026, launch: 'Sep. 2026',
     h: 150.0, w: 71.9, d: 8.75, g: 211, diag: 6.3, res: [1206, 2622], ppi: 460, disp: 'OLED (ProMotion, Always-On, 3000 Nits)', hz: 120,
     chip: 'Apple A20 Pro (2 nm)', cam: '48 MP Fusion (variable Blende) + 48 MP Ultraweit + 48 MP Tele', camLayout: 'pro-plateau', camCount: 3, lidar: true, bump: true,
     front: 'island', islandSmall: true, corner: 12, screenCorner: 10, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
@@ -619,7 +619,7 @@ export const PHONES = [
     feat: ['Variable Blende (ƒ/1.48–4.0)', 'A20 Pro in 2 nm', 'Apple-C2-Modem', 'Siri mit Apple Intelligence'],
   },
   {
-    id: '18promax', bezel: 2.64, name: 'iPhone 18 Pro Max', year: 2026, launch: 'Sep. 2026',
+    id: '18promax', video: 45, bezel: 2.64, name: 'iPhone 18 Pro Max', year: 2026, launch: 'Sep. 2026',
     h: 163.4, w: 78.0, d: 8.75, g: 249, diag: 6.9, res: [1320, 2868], ppi: 460, disp: 'OLED (ProMotion, Always-On, 3000 Nits)', hz: 120,
     chip: 'Apple A20 Pro (2 nm)', cam: '48 MP Fusion (variable Blende) + 48 MP Ultraweit + 48 MP 4×/8× Tele', camLayout: 'pro-plateau', camCount: 3, lidar: true, bump: true,
     front: 'island', islandSmall: true, corner: 13, screenCorner: 11, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
@@ -630,7 +630,7 @@ export const PHONES = [
     feat: ['Variable Blende', 'Bis zu 30 h Nutzung (Apple-Angabe)', 'A20 Pro', 'Top-Modell knackt 3.000 €'],
   },
   {
-    id: 'duo', name: 'iPhone Duo', year: 2026, launch: 'Okt. 2026 (Vorbestellung 16.10.)',
+    id: 'duo', video: 31, videoOuter: 44, name: 'iPhone Duo', year: 2026, launch: 'Okt. 2026 (Vorbestellung 16.10.)',
     foldable: true,
     // Zugeklappt: 84,1 × 117,8 × 11,3 mm · Aufgeklappt: 164,6 × 117,8 × 5,2 mm
     h: 117.8, w: 84.1, d: 11.3, wOpen: 164.6, dOpen: 5.2, g: 254,
