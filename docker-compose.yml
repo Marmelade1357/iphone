@@ -1,0 +1,13 @@
+name: iphonevergleich
+
+services:
+  app:
+    build: .
+    environment:
+      - TZ=Europe/Berlin
+    ports:
+      # Nur intern auf dem Pi erreichbar (127.0.0.1:8103) - der Reverse Proxy des Pi
+      # routet z.B. iphone.oualid.de hierher. Port 8103 gewählt, weil 8080/8081 und
+      # 8092-8102 schon von den Spielen und dem Spielehub belegt sind.
+      - "127.0.0.1:8103:80"
+    restart: unless-stopped

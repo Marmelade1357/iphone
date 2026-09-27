@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>iPhone-Vergleich 3D</title>
+<meta name="description" content="Alle iPhones von 2007 bis 2026 in echter Größe als drehbare 3D-Modelle in einem Showroom vergleichen – mit Preisen je Speicher und Inflationsbereinigung." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='28' y='6' width='44' height='88' rx='10' fill='%23222'/%3E%3Crect x='32' y='12' width='36' height='76' rx='6' fill='%234f8cff'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="style.css" />
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/" } }
+</script>
+</head>
+<body>
+<!-- Vollbild-Showroom -->
+<div class="stage" id="stage">
+  <div class="tip" id="tip" hidden></div>
+</div>
+
+<!-- Schwebende Bedienelemente -->
+<header class="float brand">
+  <strong>iPhone-Vergleich</strong>
+  <span>2007 – 2026 · echte Größe</span>
+</header>
+
+<nav class="float toolbar" aria-label="Steuerung">
+  <div class="ctl">
+    <span class="lbl">Geräte</span>
+    <div class="seg" id="countSeg" role="radiogroup" aria-label="Anzahl Geräte">
+      <button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button>
+    </div>
+  </div>
+  <div class="ctl">
+    <span class="lbl">Display</span>
+    <div class="seg" id="screenSeg" role="radiogroup" aria-label="Display">
+      <button data-v="off">Aus</button><button data-v="on">An</button>
+    </div>
+  </div>
+  <div class="ctl" id="duoCtl" hidden>
+    <span class="lbl">Duo</span>
+    <div class="seg" id="foldSeg">
+      <button data-v="0">Zu</button><button data-v="90">Halb</button><button data-v="180">Auf</button>
+    </div>
+    <input type="range" id="foldRange" min="0" max="180" step="1" value="180" aria-label="Öffnungswinkel" />
+    <span class="val" id="foldVal">180°</span>
+  </div>
+  <div class="ctl toggles">
+    <label class="tog"><input type="checkbox" id="syncTog" checked /> <span>Gemeinsam drehen</span></label>
+    <label class="tog"><input type="checkbox" id="gridTog" checked /> <span>Lineal</span></label>
+  </div>
+</nav>
+
+<nav class="float views" aria-label="Ansicht">
+  <span class="lbl">Ansicht</span>
+  <div class="seg vertical" id="viewSeg">
+    <button data-v="front">Vorne</button><button data-v="back">Hinten</button>
+    <button data-v="left">Links</button><button data-v="right">Rechts</button>
+    <button data-v="top">Oben</button><button data-v="bottom">Unten</button>
+    <button data-v="three">3/4</button>
+  </div>
+</nav>
+
+<div class="float side-actions">
+  <button class="pill-btn" id="specsBtn" aria-expanded="false" aria-controls="specsPanel">Technische Daten</button>
+  <button class="icon-btn" id="resetBtn" title="Ansicht zurücksetzen" aria-label="Ansicht zurücksetzen">⟲</button>
+  <button class="icon-btn" id="helpBtn" title="Bedienung" aria-label="Bedienung">?</button>
+</div>
+
+<div class="float help" id="help" hidden>
+  <b>Bedienung</b>
+  <ul>
+    <li>Gerät ziehen: drehen (bei 1 Gerät: um das Gerät herumgehen)</li>
+    <li>Tasten anklicken: drücken · Display antippen: entsperren</li>
+    <li>Hintergrund ziehen: Blickwinkel · Mausrad/Pinch: Zoom</li>
+    <li>Rechte Maustaste ziehen: verschieben</li>
+  </ul>
+</div>
+
+<section class="float slots" id="slots" aria-label="Geräteauswahl"></section>
+
+<aside class="float specs" id="specsPanel" aria-label="Technische Daten" hidden>
+  <div class="specs-head">
+    <h2>Technische Daten</h2>
+    <div class="ctl">
+      <div class="seg" id="priceSeg">
+        <button data-v="nom">Damals</button><button data-v="real">Inflationsbereinigt</button>
+      </div>
+      <button class="icon-btn" id="specsClose" aria-label="Schließen">✕</button>
+    </div>
+  </div>
+  <div class="table-scroll"><table id="specTable"></table></div>
+  <p class="note" id="priceNote"></p>
+  <p class="note">Maße & Daten: Apple Tech Specs, Apple Dimensional Drawings, Pressemitteilungen und Fachpresse. Preise = deutsche Apple-UVP zum Marktstart je Speichervariante; Inflationsbereinigung über den Verbraucherpreisindex (Destatis).</p>
+</aside>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

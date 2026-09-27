@@ -1,0 +1,5 @@
+node_modules/
+.DS_Store
+# lokale Docker-/Desktop-Konfiguration, nicht ins Repo
+.config/
+.docker/
