@@ -90,7 +90,7 @@ button, select, input { font: inherit; color: inherit; }
 .slot .cname { font-size: 0.75rem; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ---------- Technische Daten als Seitenpanel */
-.specs { top: 70px; right: 16px; bottom: 16px; width: min(760px, calc(100vw - 32px)); padding: 14px; display: flex; flex-direction: column;
+.specs { top: 70px; right: 16px; bottom: 16px; width: min(var(--specs-w, 760px), calc(100vw - 32px)); padding: 14px; display: flex; flex-direction: column;
   background: var(--glass-strong); z-index: 20; }
 .specs[hidden] { display: none; }
 .specs-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -175,4 +175,16 @@ ul.plus li::before { content: '✓'; position: absolute; left: 0; color: var(--g
   table { font-size: 0.8rem; }
   .chip { font-size: 0.72rem; padding: 2px 7px; }
   .ghost-btn { padding: 7px 9px; }
+}
+
+/* Tabelle passt sich der Panelbreite an – kein seitliches Scrollen */
+table { table-layout: fixed; }
+table col.lab { width: 138px; }
+td { min-width: 0; overflow-wrap: break-word; hyphens: auto; }
+tbody th { white-space: normal; }
+.table-scroll { overflow-x: hidden; overflow-y: auto; }
+@media (max-width: 640px) {
+  table col.lab { width: 84px; }
+  th, td { padding: 7px 6px; }
+  td .bar { display: none; }
 }

@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/addons/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/RoomEnvironment.js';
 import { PHONES, VPI_NOW, vpiFor } from './data.js';
 import { Phone } from './phone.js';
+import { buildShowroom, TABLE_TOP, TABLE_W, TABLE_D } from './showroom.js';
 
 const $ = (s) => document.querySelector(s);
 const byId = (id) => PHONES.find((p) => p.id === id) || PHONES[PHONES.length - 1];
@@ -69,7 +70,7 @@ const stage = $('#stage');
 const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
+renderer.toneMappingExposure = 0.95;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -78,17 +79,17 @@ stage.prepend(renderer.domElement);
 const scene = new THREE.Scene();
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-scene.background = new THREE.Color(0xeeebe6);
-scene.fog = new THREE.Fog(0xeeebe6, 4500, 11000);
+scene.background = new THREE.Color(0xe9e6e1);
+scene.fog = new THREE.Fog(0xe9e6e1, 9000, 22000);
 
-const key = new THREE.DirectionalLight(0xffffff, 1.35);
+const key = new THREE.DirectionalLight(0xfff8f0, 1.1);
 key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
 key.shadow.bias = -0.0004;
 key.shadow.normalBias = 0.6;
 scene.add(key, key.target);
-const rim = new THREE.DirectionalLight(0xe6eeff, 0.45); rim.position.set(-1500, 1200, -1500); scene.add(rim);
-scene.add(new THREE.HemisphereLight(0xffffff, 0xcbb89c, 0.3));
+const rim = new THREE.DirectionalLight(0xeef4ff, 0.55); rim.position.set(4000, 1500, 800); scene.add(rim);   // Tageslicht vom Schaufenster
+scene.add(new THREE.HemisphereLight(0xffffff, 0xd8cbb8, 0.55));
 
 const camera = new THREE.PerspectiveCamera(30, 1, 5, 20000);
 camera.position.set(0, 90, 700);
@@ -103,361 +104,18 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.minDistance = 120;
-controls.maxDistance = 2600;
+controls.maxDistance = 3200;
 controls.maxPolarAngle = Math.PI * 0.62;
 controls.target.set(0, 0, 0);
 
 // ---------------------------------------------------------------- Showroom
-// Maße in mm. Der Präsentationstisch steht fest im Raum (TABLE_TOP = Oberkante).
-const TABLE_TOP = 0, TABLE_H = 760, TABLE_W = 2400, TABLE_D = 950, TABLE_T = 40;
-const FLOOR = TABLE_TOP - TABLE_H;
-const ROOM = { x0: -4200, x1: 4200, z0: -2600, z1: 4200, h: 3400 };
-
-function canvasTex(w, h, draw, repeat) {
-  const c = document.createElement('canvas'); c.width = w; c.height = h;
-  draw(c.getContext('2d'), w, h);
-  const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
-  if (repeat) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeat[0], repeat[1]); }
-  return t;
-}
-let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-
-const woodTex = canvasTex(2048, 1024, (g, W, H) => {
-  const planks = 6, ph = H / planks;
-  for (let k = 0; k < planks; k++) {
-    const tone = 0.93 + rnd() * 0.12;
-    g.fillStyle = `rgb(${Math.round(196 * tone)},${Math.round(156 * tone)},${Math.round(110 * tone)})`;
-    g.fillRect(0, k * ph, W, ph);
-    for (let i = 0; i < 70; i++) {
-      const y = k * ph + rnd() * ph;
-      g.strokeStyle = `rgba(100,60,25,${0.06 + rnd() * 0.1})`; g.lineWidth = 0.6 + rnd() * 1.8;
-      g.beginPath(); g.moveTo(0, y);
-      for (let x = 0; x <= W; x += 64) g.lineTo(x, y + Math.sin(x / (180 + rnd() * 90) + k) * (2 + rnd() * 4));
-      g.stroke();
-    }
-    g.fillStyle = 'rgba(90,60,30,.2)'; g.fillRect(0, k * ph, W, 2);
-  }
-});
-const woodMat = new THREE.MeshPhysicalMaterial({ map: woodTex, color: 0xe6cfae, roughness: 0.5, clearcoat: 0.35, clearcoatRoughness: 0.35, envMapIntensity: 0.55 });
-const woodSideMat = new THREE.MeshStandardMaterial({ color: 0xa47a4c, roughness: 0.55 });
-
-const floorTex = canvasTex(1024, 1024, (g, W, H) => {
-  g.fillStyle = '#d9d5ce'; g.fillRect(0, 0, W, H);
-  for (let i = 0; i < 900; i++) { // Terrazzo-Körnung
-    g.fillStyle = `rgba(${120 + rnd() * 80},${115 + rnd() * 70},${105 + rnd() * 60},${0.25 + rnd() * 0.35})`;
-    g.beginPath(); g.arc(rnd() * W, rnd() * H, 1 + rnd() * 4, 0, Math.PI * 2); g.fill();
-  }
-  g.strokeStyle = 'rgba(120,112,100,.35)'; g.lineWidth = 3; g.strokeRect(0, 0, W, H);
-}, [7, 6]);
-const floorMat = new THREE.MeshPhysicalMaterial({ map: floorTex, roughness: 0.32, clearcoat: 0.4, clearcoatRoughness: 0.25, envMapIntensity: 0.6 });
-const wallMat = new THREE.MeshStandardMaterial({ color: 0xf1eee9, roughness: 0.92 });
-const ceilMat = new THREE.MeshStandardMaterial({ color: 0xf7f6f3, roughness: 0.95 });
-const lightMat = new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false });
-const slatMat = new THREE.MeshStandardMaterial({ color: 0xb58a5a, roughness: 0.6 });
-const darkMat = new THREE.MeshStandardMaterial({ color: 0x3b3b3e, roughness: 0.5, metalness: 0.3 });
-const potMat = new THREE.MeshStandardMaterial({ color: 0xe7e3dc, roughness: 0.7 });
-const leafMat = new THREE.MeshStandardMaterial({ color: 0x5f8a4a, roughness: 0.8 });
-const legMat = new THREE.MeshStandardMaterial({ color: 0x8f6a42, roughness: 0.55 });
-
-function roundedSlab(w, d, t, r, mats) {
-  const s = new THREE.Shape();
-  s.moveTo(-w / 2 + r, -d / 2); s.lineTo(w / 2 - r, -d / 2); s.quadraticCurveTo(w / 2, -d / 2, w / 2, -d / 2 + r);
-  s.lineTo(w / 2, d / 2 - r); s.quadraticCurveTo(w / 2, d / 2, w / 2 - r, d / 2); s.lineTo(-w / 2 + r, d / 2);
-  s.quadraticCurveTo(-w / 2, d / 2, -w / 2, d / 2 - r); s.lineTo(-w / 2, -d / 2 + r); s.quadraticCurveTo(-w / 2, -d / 2, -w / 2 + r, -d / 2);
-  const geo = new THREE.ExtrudeGeometry(s, { depth: t - 6, bevelEnabled: true, bevelThickness: 3, bevelSize: 3, bevelSegments: 4, curveSegments: 20 });
-  const uv = geo.attributes.uv, pos = geo.attributes.position;
-  for (let i = 0; i < uv.count; i++) uv.setXY(i, (pos.getX(i) + w / 2) / w, (pos.getY(i) + d / 2) / d);
-  geo.rotateX(-Math.PI / 2);
-  geo.translate(0, -t + 3, 0);
-  return new THREE.Mesh(geo, mats);
-}
-
-// Präsentationstisch im Apple-Store-Stil (Holzplatte auf Holzbeinen)
-function makeTable(w, d, x, z, withShadow) {
-  const g = new THREE.Group();
-  const top = roundedSlab(w, d, TABLE_T, 40, [woodMat, woodSideMat]);
-  top.receiveShadow = true; top.castShadow = withShadow; g.add(top);
-  const legH = TABLE_H - TABLE_T;
-  const lg = new THREE.BoxGeometry(70, legH, 70);
-  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
-    const leg = new THREE.Mesh(lg, legMat);
-    leg.position.set(sx * (w / 2 - 110), -TABLE_T - legH / 2, sz * (d / 2 - 110));
-    leg.castShadow = withShadow; leg.receiveShadow = true; g.add(leg);
-  });
-  const rail = new THREE.Mesh(new THREE.BoxGeometry(w - 220, 60, 30), legMat);
-  rail.position.set(0, -TABLE_T - 40, 0); g.add(rail);
-  g.position.set(x, TABLE_TOP, z);
-  return g;
-}
-
-function makePlant(x, z, s = 1) {
-  const g = new THREE.Group();
-  const pot = new THREE.Mesh(new THREE.CylinderGeometry(260 * s, 200 * s, 520 * s, 32), potMat);
-  pot.position.y = 260 * s; pot.castShadow = true; g.add(pot);
-  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(22 * s, 30 * s, 1300 * s, 10), new THREE.MeshStandardMaterial({ color: 0x7a5a3a, roughness: 0.9 }));
-  trunk.position.y = 520 * s + 650 * s; g.add(trunk);
-  for (let i = 0; i < 9; i++) {
-    const leaf = new THREE.Mesh(new THREE.IcosahedronGeometry((260 + rnd() * 160) * s, 1), leafMat);
-    leaf.position.set((rnd() - 0.5) * 520 * s, (1500 + rnd() * 600) * s, (rnd() - 0.5) * 520 * s);
-    leaf.castShadow = true; g.add(leaf);
-  }
-  g.position.set(x, FLOOR, z);
-  return g;
-}
-
-// ---------------------------------------------------------------- Telekom × Apple Deko
-const MAGENTA = '#e20074';
-const magentaGlow = new THREE.MeshBasicMaterial({ color: 0xff2a95, toneMapped: false });
-const FONT_UI = '-apple-system, "SF Pro Display", "Segoe UI", Roboto, Arial, sans-serif';
-function textFit(g, text, maxW, weight, size) {
-  let fs = size; g.font = `${weight} ${fs}px ${FONT_UI}`;
-  while (g.measureText(text).width > maxW && fs > 20) { fs -= 4; g.font = `${weight} ${fs}px ${FONT_UI}`; }
-}
-// Telekom-Logo (vom Nutzer bereitgestellt) – wird nach dem Laden in alle Markenflächen gezeichnet
-const TLOGO = new Image();
-const brandTextures = [];
-function brandTex(w, h, draw) {
-  const c = document.createElement('canvas'); c.width = w; c.height = h;
-  const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
-  const redraw = () => { const g = c.getContext('2d'); g.clearRect(0, 0, w, h); draw(g, w, h); t.needsUpdate = true; };
-  redraw(); brandTextures.push(redraw);
-  return t;
-}
-TLOGO.onload = () => brandTextures.forEach((f) => f());
-TLOGO.src = 'assets/telekom-logo.svg';
-// Logo in Wunschfarbe (z. B. weiß auf Magenta) zeichnen; h = Höhe in px
-function drawLogo(g, x, y, h, color) {
-  if (!TLOGO.complete || !TLOGO.naturalWidth) return 0;
-  const w = h * (TLOGO.naturalWidth / TLOGO.naturalHeight);
-  const off = document.createElement('canvas'); off.width = Math.ceil(w); off.height = Math.ceil(h);
-  const o = off.getContext('2d');
-  o.drawImage(TLOGO, 0, 0, w, h);
-  if (color) { o.globalCompositeOperation = 'source-in'; o.fillStyle = color; o.fillRect(0, 0, w, h); }
-  g.drawImage(off, x, y);
-  return w;
-}
-function posterTelekom() {
-  return brandTex(1400, 2200, (g, W, H) => {
-    const gr = g.createLinearGradient(0, 0, W * 0.4, H);
-    gr.addColorStop(0, '#ff3fa4'); gr.addColorStop(0.55, MAGENTA); gr.addColorStop(1, '#8a0048');
-    g.fillStyle = gr; g.fillRect(0, 0, W, H);
-    const phone = (x, y, w, h, c) => {
-      g.save(); g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowBlur = 40; g.shadowOffsetY = 20;
-      g.fillStyle = '#16161a'; roundRect(g, x, y, w, h, w * 0.16); g.fill(); g.restore();
-      const sg = g.createLinearGradient(x, y, x + w, y + h); sg.addColorStop(0, c); sg.addColorStop(1, '#1a1440');
-      g.fillStyle = sg; roundRect(g, x + 14, y + 14, w - 28, h - 28, w * 0.13); g.fill();
-      g.fillStyle = '#000'; roundRect(g, x + w / 2 - w * 0.12, y + 34, w * 0.24, 30, 15); g.fill();
-    };
-    phone(250, 900, 420, 860, '#ff9ecf'); phone(720, 780, 440, 900, '#7fb4ff');
-    drawLogo(g, 100, 110, 150, '#ffffff');
-    g.fillStyle = '#fff'; g.textAlign = 'left';
-    textFit(g, 'iPhone 18 Pro.', W - 200, 800, 140); g.fillText('iPhone 18 Pro.', 100, 450);
-    textFit(g, 'Besser im besten Netz.', W - 200, 650, 96); g.fillText('Besser im besten Netz.', 100, 580);
-    g.font = `500 60px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.9)';
-    g.fillText('Jetzt bei der Telekom – mit 5G.', 100, 690);
-    g.fillStyle = '#fff'; roundRect(g, 100, 1900, 620, 130, 65); g.fill();
-    g.fillStyle = MAGENTA; g.font = `700 60px ${FONT_UI}`; g.fillText('Jetzt beraten lassen', 150, 1985);
-  });
-}
-function posterDuo() {
-  return brandTex(1400, 2200, (g, W, H) => {
-    g.fillStyle = '#0b0b0e'; g.fillRect(0, 0, W, H);
-    const rg = g.createRadialGradient(W / 2, H * 0.55, 50, W / 2, H * 0.55, 900);
-    rg.addColorStop(0, 'rgba(226,0,116,.55)'); rg.addColorStop(1, 'rgba(226,0,116,0)');
-    g.fillStyle = rg; g.fillRect(0, 0, W, H);
-    const x = 250, y = 820, w = 900, h = 640;
-    g.fillStyle = '#d9d4c9'; roundRect(g, x, y, w, h, 70); g.fill();
-    const sg = g.createLinearGradient(x, y, x + w, y + h); sg.addColorStop(0, '#5b7cff'); sg.addColorStop(0.5, '#b04fd8'); sg.addColorStop(1, MAGENTA);
-    g.fillStyle = sg; roundRect(g, x + 18, y + 18, w - 36, h - 36, 56); g.fill();
-    g.fillStyle = '#fff'; g.textAlign = 'center';
-    g.font = `800 150px ${FONT_UI}`; g.fillText('iPhone Duo', W / 2, 380);
-    g.font = `500 68px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.85)';
-    g.fillText('Das erste faltbare iPhone.', W / 2, 500);
-    g.font = `700 76px ${FONT_UI}`; g.fillStyle = '#ff5fb0';
-    g.fillText('Ab 23.10. bei der Telekom', W / 2, 1700);
-    g.font = `500 56px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.75)';
-    g.fillText('Jetzt vorbestellen', W / 2, 1800);
-    const lh = 120, lw = drawLogo(g, -9999, -9999, lh) || 0;
-    if (lw) drawLogo(g, (W - lw) / 2, 1930, lh, MAGENTA);
-  });
-}
-function accentWallTex() {
-  return brandTex(2048, 1600, (g, W, H) => {
-    g.fillStyle = MAGENTA; g.fillRect(0, 0, W, H);
-    for (let i = 0; i < 14; i++) { g.beginPath(); g.arc(W * 0.82, H * 0.2, 140 + i * 110, 0, Math.PI * 2); g.lineWidth = 3; g.strokeStyle = 'rgba(255,255,255,.07)'; g.stroke(); }
-    drawLogo(g, 150, 250, 330, '#ffffff');
-    g.fillStyle = '#fff'; g.textAlign = 'left';
-    g.font = `800 150px ${FONT_UI}`; g.fillText('Connecting', 150, 830);
-    g.fillText('your world.', 150, 990);
-    g.font = `500 70px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.9)';
-    g.fillText('Telekom × iPhone', 150, 1130);
-  });
-}
-function counterTex() {
-  return brandTex(2100, 1060, (g, W, H) => {
-    g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
-    g.fillStyle = MAGENTA; g.fillRect(0, H - 120, W, 120);
-    const lw = drawLogo(g, -9999, -9999, 200) || 0;
-    if (lw) drawLogo(g, (W - lw) / 2, 110, 200);
-    g.fillStyle = '#1d1d1f'; g.textAlign = 'center';
-    g.font = `700 110px ${FONT_UI}`; g.fillText('Beratung & Service', W / 2, 520);
-    g.font = `500 60px ${FONT_UI}`; g.fillStyle = '#6b6b70';
-    g.fillText('Tarife · Vertragsverlängerung · Einrichtung', W / 2, 630);
-  });
-}
-function tvTex() {
-  return brandTex(1920, 1080, (g, W, H) => {
-    const gr = g.createLinearGradient(0, 0, W, H); gr.addColorStop(0, '#111116'); gr.addColorStop(1, '#2a0a1d');
-    g.fillStyle = gr; g.fillRect(0, 0, W, H);
-    const rg = g.createRadialGradient(W * 0.72, H * 0.5, 40, W * 0.72, H * 0.5, 620);
-    rg.addColorStop(0, 'rgba(226,0,116,.5)'); rg.addColorStop(1, 'rgba(226,0,116,0)'); g.fillStyle = rg; g.fillRect(0, 0, W, H);
-    // stilisiertes Kamera-Plateau
-    g.fillStyle = '#c9c9cc'; roundRect(g, W * 0.56, H * 0.2, W * 0.32, H * 0.36, 60); g.fill();
-    g.fillStyle = '#9d9da2'; roundRect(g, W * 0.575, H * 0.23, W * 0.29, H * 0.3, 44); g.fill();
-    [[0.63, 0.32], [0.63, 0.46], [0.73, 0.39]].forEach(([cx, cy]) => {
-      g.fillStyle = '#e8e8ea'; g.beginPath(); g.arc(W * cx, H * cy, 72, 0, Math.PI * 2); g.fill();
-      g.fillStyle = '#101018'; g.beginPath(); g.arc(W * cx, H * cy, 58, 0, Math.PI * 2); g.fill();
-      g.fillStyle = '#2c3350'; g.beginPath(); g.arc(W * cx, H * cy, 24, 0, Math.PI * 2); g.fill();
-    });
-    g.fillStyle = '#fff'; g.textAlign = 'left';
-    g.font = `800 110px ${FONT_UI}`; g.fillText('iPhone 18 Pro', 110, 330);
-    g.font = `500 54px ${FONT_UI}`; g.fillStyle = 'rgba(255,255,255,.8)';
-    ['A20 Pro in 2 nm', 'Variable Blende', 'Bis zu 45 h Video (Pro Max)'].forEach((t, i) => g.fillText(t, 110, 460 + i * 80));
-    g.font = `700 58px ${FONT_UI}`; g.fillStyle = '#ff5fb0'; g.fillText('Besser im besten Netz.', 110, 880);
-    drawLogo(g, W - 190, H - 190, 110, '#ffffff');
-  });
-}
-function roundRect(g, x, y, w, h, r) {
-  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
-  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
-}
-
-function buildShowroom() {
-  const room = new THREE.Group();
-  const { x0, x1, z0, z1, h } = ROOM, W = x1 - x0, D = z1 - z0;
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), floorMat);
-  floor.rotation.x = -Math.PI / 2; floor.position.set((x0 + x1) / 2, FLOOR, (z0 + z1) / 2); floor.receiveShadow = true;
-  room.add(floor);
-  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(W, D), ceilMat);
-  ceil.rotation.x = Math.PI / 2; ceil.position.set((x0 + x1) / 2, FLOOR + h, (z0 + z1) / 2); room.add(ceil);
-  const wall = (w, px, pz, ry) => {
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), wallMat);
-    m.position.set(px, FLOOR + h / 2, pz); m.rotation.y = ry; m.receiveShadow = true; room.add(m);
-  };
-  wall(W, (x0 + x1) / 2, z0, 0);                 // Rückwand
-  wall(W, (x0 + x1) / 2, z1, Math.PI);           // Wand hinter der Kamera
-  wall(D, x0, (z0 + z1) / 2, Math.PI / 2);       // links
-  wall(D, x1, (z0 + z1) / 2, -Math.PI / 2);      // rechts
-  // Sockelleisten
-  [[W, (x0 + x1) / 2, z0 + 6, 0], [W, (x0 + x1) / 2, z1 - 6, 0]].forEach(([w, px, pz]) => {
-    const b = new THREE.Mesh(new THREE.BoxGeometry(w, 80, 12), darkMat); b.position.set(px, FLOOR + 40, pz); room.add(b);
-  });
-  // Holzlamellen-Wand hinter dem Tisch
-  const slatW = 3600, n = 60;
-  for (let i = 0; i < n; i++) {
-    const s = new THREE.Mesh(new THREE.BoxGeometry(34, h - 400, 40), slatMat);
-    s.position.set(-slatW / 2 + (i + 0.5) * (slatW / n), FLOOR + (h - 400) / 2 + 200, z0 + 25);
-    s.receiveShadow = true; room.add(s);
-  }
-  // Leuchtwände (Plakate) links und rechts der Lamellen – Telekom × Apple
-  const posters = [posterTelekom(), posterDuo()];
-  [-1, 1].forEach((sx, k) => {
-    const lb = new THREE.Mesh(new THREE.PlaneGeometry(1400, 2200), new THREE.MeshBasicMaterial({ map: posters[k], toneMapped: false }));
-    lb.position.set(sx * 2850, FLOOR + 1700, z0 + 14); room.add(lb);
-    const frame = new THREE.Mesh(new THREE.BoxGeometry(1460, 2260, 20), darkMat);
-    frame.position.set(sx * 2850, FLOOR + 1700, z0 + 2); room.add(frame);
-  });
-  // Magenta-Lichtleisten ober- und unterhalb der Holzlamellen
-  [FLOOR + 190, FLOOR + h - 190].forEach((y) => {
-    const led = new THREE.Mesh(new THREE.BoxGeometry(3700, 18, 30), magentaGlow);
-    led.position.set(0, y, z0 + 60); room.add(led);
-  });
-  // Lichtbänder an der Decke (eins in Magenta über dem Haupttisch)
-  for (let i = 0; i < 4; i++) {
-    const strip = new THREE.Mesh(new THREE.BoxGeometry(W - 1200, 12, 90), i === 1 ? magentaGlow : lightMat);
-    strip.position.set((x0 + x1) / 2, FLOOR + h - 8, z0 + 900 + i * 1500); room.add(strip);
-  }
-  // Magenta-Akzentwand links mit Schriftzug
-  const accent = new THREE.Mesh(new THREE.PlaneGeometry(3600, h - 600), new THREE.MeshStandardMaterial({ map: accentWallTex(), roughness: 0.85 }));
-  accent.rotation.y = Math.PI / 2; accent.position.set(x0 + 4, FLOOR + (h - 600) / 2 + 300, 600); room.add(accent);
-  // Beratungstheke rechts hinten
-  const counter = new THREE.Group();
-  const top = new THREE.Mesh(new THREE.BoxGeometry(2200, 40, 700), new THREE.MeshStandardMaterial({ color: 0xf6f6f4, roughness: 0.4 }));
-  top.position.y = 1080; top.castShadow = true; counter.add(top);
-  const bodyC = new THREE.Mesh(new THREE.BoxGeometry(2100, 1060, 620), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 }));
-  bodyC.position.y = 530; counter.add(bodyC);
-  const front = new THREE.Mesh(new THREE.PlaneGeometry(2100, 1060), new THREE.MeshBasicMaterial({ map: counterTex(), toneMapped: false }));
-  front.position.set(0, 530, 311); counter.add(front);
-  const glow = new THREE.Mesh(new THREE.BoxGeometry(2100, 10, 10), magentaGlow);
-  glow.position.set(0, 12, 315); counter.add(glow);
-  counter.position.set(3700, FLOOR, 200); counter.rotation.y = -Math.PI / 2;
-  room.add(counter);
-  // Wand-Display über der Theke
-  const tv = new THREE.Group();
-  const tvBody = new THREE.Mesh(new THREE.BoxGeometry(1640, 940, 40), new THREE.MeshStandardMaterial({ color: 0x111113, roughness: 0.4 }));
-  const tvScreen = new THREE.Mesh(new THREE.PlaneGeometry(1600, 900), new THREE.MeshBasicMaterial({ map: tvTex(), toneMapped: false }));
-  tvScreen.position.z = 21; tv.add(tvBody, tvScreen);
-  tv.position.set(x1 - 30, FLOOR + 2050, 200); tv.rotation.y = -Math.PI / 2; room.add(tv);
-  // Teppich unter dem Haupttisch
-  const rugShape = new THREE.Shape();
-  { const rw = 3400, rd = 2000, rr = 300;
-    rugShape.moveTo(-rw / 2 + rr, -rd / 2); rugShape.lineTo(rw / 2 - rr, -rd / 2); rugShape.quadraticCurveTo(rw / 2, -rd / 2, rw / 2, -rd / 2 + rr);
-    rugShape.lineTo(rw / 2, rd / 2 - rr); rugShape.quadraticCurveTo(rw / 2, rd / 2, rw / 2 - rr, rd / 2); rugShape.lineTo(-rw / 2 + rr, rd / 2);
-    rugShape.quadraticCurveTo(-rw / 2, rd / 2, -rw / 2, rd / 2 - rr); rugShape.lineTo(-rw / 2, -rd / 2 + rr); rugShape.quadraticCurveTo(-rw / 2, -rd / 2, -rw / 2 + rr, -rd / 2); }
-  const rug = new THREE.Mesh(new THREE.ShapeGeometry(rugShape, 12), new THREE.MeshStandardMaterial({ color: 0xd9d3ca, roughness: 1 }));
-  rug.rotation.x = -Math.PI / 2; rug.position.set(0, FLOOR + 2, 150); rug.receiveShadow = true; room.add(rug);
-  const rugEdge = new THREE.Mesh(new THREE.ShapeGeometry(rugShape, 12), new THREE.MeshStandardMaterial({ color: 0xe20074, roughness: 1 }));
-  rugEdge.rotation.x = -Math.PI / 2; rugEdge.scale.set(1.02, 1.035, 1); rugEdge.position.set(0, FLOOR + 1, 150); room.add(rugEdge);
-  // Pendelleuchten über dem Haupttisch
-  const lampMat = new THREE.MeshStandardMaterial({ color: 0xf4f2ee, roughness: 0.5, metalness: 0.1 });
-  const cableMat = new THREE.MeshBasicMaterial({ color: 0x333333 });
-  [-800, 0, 800].forEach((lx) => {
-    const shade = new THREE.Mesh(new THREE.CylinderGeometry(90, 170, 190, 40, 1, true), lampMat);
-    const y = TABLE_TOP + 1250;
-    shade.position.set(lx, y, 0); room.add(shade);
-    const bulb = new THREE.Mesh(new THREE.CircleGeometry(160, 40), new THREE.MeshBasicMaterial({ color: 0xfff6e8, toneMapped: false }));
-    bulb.rotation.x = Math.PI / 2; bulb.position.set(lx, y - 92, 0); room.add(bulb);
-    const cable = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, FLOOR + h - y - 95, 6), cableMat);
-    cable.position.set(lx, (y + 95 + FLOOR + h) / 2, 0); room.add(cable);
-  });
-  // weitere Präsentationstische im Hintergrund
-  room.add(makeTable(2000, 850, -2600, -1300, false));
-  room.add(makeTable(2000, 850, -2900, 1700, false));
-  room.add(makeTable(2000, 850, 2900, 1700, false));
-  // Ausstellungs-Attrappen auf den Nebentischen
-  const dummyMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2d, roughness: 0.3, metalness: 0.5 });
-  [[-2600, -1300], [-2900, 1700], [2900, 1700]].forEach(([tx, tz]) => {
-    for (let k = -2; k <= 2; k++) {
-      const dm = new THREE.Mesh(new THREE.BoxGeometry(72, 8, 150), dummyMat);
-      dm.position.set(tx + k * 320, TABLE_TOP + 4, tz); dm.rotation.y = (rnd() - 0.5) * 0.3; room.add(dm);
-    }
-  });
-  // Pflanzen
-  room.add(makePlant(-3700, -2050, 1));
-  room.add(makePlant(3700, -2050, 1));
-  room.add(makePlant(-3800, 3600, 0.9));
-  // Sitzbank vorne rechts
-  const bench = new THREE.Mesh(new THREE.BoxGeometry(1800, 60, 420), woodMat);
-  bench.position.set(2600, FLOOR + 450, 3300); bench.castShadow = true; room.add(bench);
-  [-1, 1].forEach((sx) => { const l = new THREE.Mesh(new THREE.BoxGeometry(60, 420, 380), legMat); l.position.set(2600 + sx * 800, FLOOR + 210, 3300); room.add(l); });
-  scene.add(room);
-}
-buildShowroom();
-
-// Haupttisch (fest)
-const mainTable = makeTable(TABLE_W, TABLE_D, 0, 0, true);
-scene.add(mainTable);
-{
-  const edge = new THREE.Mesh(new THREE.BoxGeometry(TABLE_W - 120, 6, 6), magentaGlow);
-  edge.position.set(0, TABLE_TOP - TABLE_T - 4, TABLE_D / 2 - 30); scene.add(edge);
-}
+const showroom = buildShowroom(scene, renderer);
+showroom.bake();                       // Raum-Reflexionen für Geräte & Tisch
 {
   const sc = key.shadow.camera;
-  sc.left = -TABLE_W / 2 - 200; sc.right = TABLE_W / 2 + 200; sc.top = TABLE_D / 2 + 700; sc.bottom = -TABLE_D / 2 - 700;
-  sc.near = 10; sc.far = 4000; sc.updateProjectionMatrix();
-  key.position.set(350, TABLE_TOP + 1600, 700); key.target.position.set(0, TABLE_TOP, 0);
+  sc.left = -TABLE_W / 2 - 300; sc.right = TABLE_W / 2 + 300; sc.top = TABLE_D / 2 + 900; sc.bottom = -TABLE_D / 2 - 900;
+  sc.near = 10; sc.far = 6000; sc.updateProjectionMatrix();
+  key.position.set(500, TABLE_TOP + 2600, 1100); key.target.position.set(0, TABLE_TOP, 0);
 }
 
 // Acryl-Ständer (nur bei 1 Gerät)
@@ -915,7 +573,8 @@ function renderTable() {
   const pvals = prs.map((x) => (state.price === 'real' ? x.real : x.price));
   const str = strengths(ps, pvals);
   const cols = ps.length + 1;
-  let html = `<thead><tr><th></th>${ps.map((p, i) => `<th><span class="dot" style="background:${SLOT_COLORS[i]}">${SLOT_LETTERS[i]}</span>${p.name}</th>`).join('')}</tr></thead><tbody>`;
+  specsPanel.style.setProperty('--specs-w', `${170 + ps.length * 270}px`);
+  let html = `<colgroup><col class="lab">${ps.map(() => '<col>').join('')}</colgroup><thead><tr><th></th>${ps.map((p, i) => `<th><span class="dot" style="background:${SLOT_COLORS[i]}">${SLOT_LETTERS[i]}</span>${p.name}</th>`).join('')}</tr></thead><tbody>`;
   for (const [title, rows] of SECTIONS) {
     html += `<tr class="sec"><th colspan="${cols}">${title}</th></tr>`;
     for (const row of rows) {
