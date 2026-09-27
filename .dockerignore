@@ -1,4 +1,8 @@
 .git
 .gitignore
+.config
+.docker
 README.md
 node_modules
+*.bat
+deploy.sh
