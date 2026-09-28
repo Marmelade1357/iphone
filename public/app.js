@@ -204,6 +204,8 @@ function buildDevice(i) {
   phone.group.userData.noBake = true;
   if (phone.p.foldable) { phone.fold = phone.foldTarget = state.fold; phone.applyFold(); }
   phone.setOn(state.display === 'on');
+  // Nur Farbe gewechselt: Display ohne Einblenden sofort zeigen
+  if (old && old.phone.p.id === slot.id) { phone._instant = true; phone.redraw(); phone._instant = false; }
   const keep = old ? { rot: old.rot, target: old.target, x: old.x } : { rot: { x: 0, y: 0 }, target: { x: 0, y: 0 }, x: 0 };
   if (!old && state.sync && devices.find(Boolean)) {
     const ref = devices.find(Boolean); keep.rot = { ...ref.rot }; keep.target = { ...ref.target };
@@ -479,7 +481,12 @@ function drawCard(canvas, i, info) {
 }
 const cardEdgeMat = new THREE.MeshStandardMaterial({ color: 0xf4f4f2, roughness: 0.5 });
 const cardAcryl = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.32, roughness: 0.04, clearcoat: 1, depthWrite: false });
+let cardSig = '';
 function buildCards() {
+  // Karten nur neu aufbauen, wenn sich Platz oder Größe ändert – sonst nur neu beschriften (kein Flackern)
+  const sig = devices.map((d) => (d ? `${d.x.toFixed(2)}:${d.span.toFixed(2)}` : '-')).join('|');
+  if (sig === cardSig && cards.length) { cards.forEach((q) => { q.key = ''; }); updateCards(); return; }
+  cardSig = sig;
   cards.forEach((q) => { scene.remove(q.group); q.tex.dispose(); q.mat.dispose(); q.group.traverse((o) => o.geometry && o.geometry.dispose()); });
   cards.length = 0;
   const act = devices.map((d, i) => (d ? i : -1)).filter((i) => i >= 0);
@@ -506,6 +513,7 @@ function buildCards() {
     scene.add(group);
     cards.push({ i, group, tex, mat, canvas, key: '' });
   });
+  updateCards();   // Textur sofort zeichnen, bevor das nächste Bild gerendert wird
 }
 function updateCards() {
   if (!cards.length) return;
@@ -561,8 +569,8 @@ function tick() {
   }
   controls.update();
   doHover();
-  renderer.render(scene, camera);
   updateCards();
+  renderer.render(scene, camera);
   requestAnimationFrame(tick);
 }
 
