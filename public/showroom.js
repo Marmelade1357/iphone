@@ -397,6 +397,29 @@ const outsideTex = canvasTex(2048, 1024, (g, W, H) => {
 });
 
 
+// Nachtansicht: dunkler Himmel, beleuchtete Fenster, Straßenlaternen
+let outsideNightTex = null;
+function makeOutsideNight() {
+  let sd = 5; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+  return canvasTex(2048, 1024, (g, W, H) => {
+    const sky = g.createLinearGradient(0, 0, 0, H * 0.72); sky.addColorStop(0, '#060a18'); sky.addColorStop(1, '#1b2340');
+    g.fillStyle = sky; g.fillRect(0, 0, W, H);
+    for (let i = 0; i < 18; i++) {
+      const bw = 120 + r() * 260, bh = 250 + r() * 420, bx = r() * W;
+      g.fillStyle = `rgba(${20 + r() * 15},${22 + r() * 15},${34 + r() * 20},.95)`; g.fillRect(bx, H * 0.72 - bh, bw, bh);
+      for (let row = 0; row < bh / 40; row++) for (let c = 0; c < bw / 36; c++) if (r() < 0.45) {
+        g.fillStyle = r() < 0.7 ? 'rgba(255,214,150,.85)' : 'rgba(170,210,255,.7)'; g.fillRect(bx + 8 + c * 36, H * 0.72 - bh + 12 + row * 40, 18, 22);
+      }
+    }
+    g.fillStyle = '#23211f'; g.fillRect(0, H * 0.72, W, H * 0.28);
+    for (let i = 0; i < 7; i++) { // Laternen
+      const x = 150 + i * 300; const rg = g.createRadialGradient(x, H * 0.6, 4, x, H * 0.6, 160);
+      rg.addColorStop(0, 'rgba(255,220,160,.9)'); rg.addColorStop(1, 'rgba(255,220,160,0)'); g.fillStyle = rg; g.fillRect(x - 170, H * 0.6 - 170, 340, 340);
+    }
+    g.filter = 'blur(5px)'; g.drawImage(g.canvas, 0, 0); g.filter = 'none';
+  });
+}
+
 // ---------------------------------------------------------------- Aufbau
 export function buildShowroom(scene, renderer) {
   const room = new THREE.Group();
@@ -425,7 +448,8 @@ export function buildShowroom(scene, renderer) {
       g.fillStyle = gr; g.fillRect(i * s + gap, j * s + gap, s - 2 * gap, s - 2 * gap);
     }
   }, [W / 2400, D / 2400]);
-  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(W - 800, D - 800), new THREE.MeshBasicMaterial({ map: ceilTex, toneMapped: false, color: 0xf2f0ec }));
+  const ceilMat = new THREE.MeshBasicMaterial({ map: ceilTex, toneMapped: false, color: 0xf2f0ec });
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(W - 800, D - 800), ceilMat);
   ceil.rotation.x = Math.PI / 2; ceil.position.set(cx, FLOOR + h, cz); room.add(ceil);
   const soffit = new THREE.Mesh(new THREE.PlaneGeometry(W, D), new THREE.MeshStandardMaterial({ color: 0xdedbd5, roughness: 0.95 }));
   soffit.rotation.x = Math.PI / 2; soffit.position.set(cx, FLOOR + h + 2, cz); room.add(soffit);
@@ -457,7 +481,8 @@ export function buildShowroom(scene, renderer) {
   accent.rotation.y = Math.PI / 2; accent.position.set(x0 + 8, FLOOR + 1900, 2700); room.add(accent);
 
   // Rechte Wand: Schaufensterfront mit Blick nach draußen
-  const outside = new THREE.Mesh(new THREE.PlaneGeometry(D, h), new THREE.MeshBasicMaterial({ map: outsideTex, toneMapped: false }));
+  const outsideMat = new THREE.MeshBasicMaterial({ map: outsideTex, toneMapped: false });
+  const outside = new THREE.Mesh(new THREE.PlaneGeometry(D, h), outsideMat);
   outside.rotation.y = -Math.PI / 2; outside.position.set(x1 + 600, FLOOR + h / 2, cz); room.add(outside);
   const glass = new THREE.Mesh(new THREE.PlaneGeometry(D, h), new THREE.MeshPhysicalMaterial({ color: 0xdfe9ee, transparent: true, opacity: 0.12, roughness: 0.05, metalness: 0 }));
   glass.rotation.y = -Math.PI / 2; glass.position.set(x1, FLOOR + h / 2, cz); room.add(glass);
@@ -532,5 +557,11 @@ export function buildShowroom(scene, renderer) {
     scene.environment = env;
     pm.dispose();
   };
-  return { bake };
+  // Tag/Nacht: Lichtdecke gedimmt, draußen dunkel (Lichter setzt app.js)
+  const setNight = (on) => {
+    if (on && !outsideNightTex) outsideNightTex = makeOutsideNight();
+    outsideMat.map = on ? outsideNightTex : outsideTex; outsideMat.needsUpdate = true;
+    ceilMat.color.set(on ? 0x8a8782 : 0xf2f0ec);
+  };
+  return { bake, setNight };
 }

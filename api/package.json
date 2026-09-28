@@ -1,0 +1,6 @@
+{
+  "name": "iphonevergleich-api",
+  "private": true,
+  "type": "module",
+  "description": "Speichert die Telekom-Preise für den iPhone-Vergleich (keine Abhängigkeiten)"
+}

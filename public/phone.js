@@ -908,7 +908,8 @@ export class Phone {
       let visible = s.on;
       if (sc.kind === 'duoInner') visible = s.on && this.fold > 12;
       if (sc.kind === 'duoOuter') visible = s.on && this.fold < 150;
-      sc.mat.emissiveIntensity = visible ? 1 : 0;
+      sc.target = visible ? 1 : 0;           // weiches Auf-/Abblenden in update()
+      if (this._instant) sc.mat.emissiveIntensity = sc.target;
       if (visible) {
         drawScreen(sc.ctx, sc.canvas.width, sc.canvas.height, s, this.p, sc.kind, this.color);
         sc.tex.needsUpdate = true;
@@ -918,6 +919,11 @@ export class Phone {
   }
 
   update(dt, now) {
+    // Display weich auf-/abblenden
+    for (const sc of this.screens) {
+      const t = sc.target ?? 0, cur = sc.mat.emissiveIntensity;
+      if (cur !== t) sc.mat.emissiveIntensity = Math.abs(t - cur) < 0.01 ? t : cur + (t - cur) * Math.min(1, dt * (t > cur ? 5 : 9));
+    }
     // Tasten-Animation
     for (const b of this.buttons) {
       if (b.t > 0) {

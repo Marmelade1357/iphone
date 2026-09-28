@@ -610,7 +610,7 @@ export const PHONES = [
   {
     id: '18pro', video: 36, bezel: 2.64, name: 'iPhone 18 Pro', year: 2026, launch: 'Sep. 2026',
     h: 150.0, w: 71.9, d: 8.75, g: 211, diag: 6.3, res: [1206, 2622], ppi: 460, disp: 'OLED (ProMotion, Always-On, 3000 Nits)', hz: 120,
-    chip: 'Apple A20 Pro (2 nm)', cam: '48 MP Fusion (variable Blende) + 48 MP Ultraweit + 48 MP Tele', camLayout: 'pro-plateau', camCount: 3, lidar: true, bump: true,
+    chip: 'Apple A20 Pro (2 nm)', cam: '48 MP Fusion (variable Blende) + 48 MP Ultraweit + 48 MP 4× Tele', camLayout: 'pro-plateau', camCount: 3, lidar: true, bump: true,
     front: 'island', islandSmall: true, corner: 12, screenCorner: 10, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
     port: 'USB-C (USB 3)', jack: null, bio: 'Face ID', ip: 'IP68', mat: 'Aluminium-Unibody',
     charge: 'MagSafe (25 W), Qi2.2', net: '5G (Apple C2), nur eSIM', alubody: true,
@@ -621,7 +621,7 @@ export const PHONES = [
   {
     id: '18promax', video: 45, bezel: 2.64, name: 'iPhone 18 Pro Max', year: 2026, launch: 'Sep. 2026',
     h: 163.4, w: 78.0, d: 8.75, g: 249, diag: 6.9, res: [1320, 2868], ppi: 460, disp: 'OLED (ProMotion, Always-On, 3000 Nits)', hz: 120,
-    chip: 'Apple A20 Pro (2 nm)', cam: '48 MP Fusion (variable Blende) + 48 MP Ultraweit + 48 MP 4×/8× Tele', camLayout: 'pro-plateau', camCount: 3, lidar: true, bump: true,
+    chip: 'Apple A20 Pro (2 nm)', cam: '48 MP Fusion (variable Blende) + 48 MP Ultraweit + 48 MP 4× Tele', camLayout: 'pro-plateau', camCount: 3, lidar: true, bump: true,
     front: 'island', islandSmall: true, corner: 13, screenCorner: 11, edge: 'soft', sw: 'action', vol: 'left', pwr: 'right', cc: true,
     port: 'USB-C (USB 3)', jack: null, bio: 'Face ID', ip: 'IP68', mat: 'Aluminium-Unibody',
     charge: 'MagSafe (25 W), Qi2.2', net: '5G (Apple C2), nur eSIM', alubody: true,

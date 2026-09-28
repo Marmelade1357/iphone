@@ -6,3 +6,5 @@ README.md
 node_modules
 *.bat
 deploy.sh
+data
+.env

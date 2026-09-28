@@ -3,3 +3,6 @@ node_modules/
 # lokale Docker-/Desktop-Konfiguration, nicht ins Repo
 .config/
 .docker/
+# Admin-Passwort und gespeicherte Telekom-Preise bleiben nur auf dem Geraet
+.env
+data/

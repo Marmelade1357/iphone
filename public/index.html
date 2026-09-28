@@ -4,14 +4,23 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>iPhone-Vergleich 3D</title>
-<meta name="description" content="Alle iPhones von 2007 bis 2026 in echter Größe als drehbare 3D-Modelle in einem Showroom vergleichen – mit Preisen je Speicher und Inflationsbereinigung." />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='28' y='6' width='44' height='88' rx='10' fill='%23222'/%3E%3Crect x='32' y='12' width='36' height='76' rx='6' fill='%234f8cff'/%3E%3C/svg%3E" />
+<meta name="description" content="Alle iPhones von 2007 bis 2026 in echter Größe als drehbare 3D-Modelle in einem Showroom vergleichen – mit Preisen je Speicher, Telekom-Preisen und Upgrade-Beratung." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='28' y='6' width='44' height='88' rx='10' fill='%23222'/%3E%3Crect x='32' y='12' width='36' height='76' rx='6' fill='%23e20074'/%3E%3C/svg%3E" />
 <link rel="stylesheet" href="style.css" />
 <script type="importmap">
 { "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/" } }
 </script>
 </head>
 <body>
+<!-- Ladebildschirm -->
+<div class="loader" id="loader" role="status" aria-live="polite">
+  <div class="loader-box">
+    <div class="loader-title">Showroom wird erstellt</div>
+    <div class="loader-bar"><i id="loaderBar"></i></div>
+    <div class="loader-step" id="loaderStep">Lade 3D-Engine …</div>
+  </div>
+</div>
+
 <!-- Vollbild-Showroom -->
 <div class="stage" id="stage">
   <div class="tip" id="tip" hidden></div>
@@ -19,12 +28,14 @@
 
 <!-- Schwebende Bedienelemente -->
 <header class="float brand">
-  <strong>iPhone-Vergleich</strong>
-  <span>2007 – 2026 · echte Größe</span>
+  <div class="brand-title"><strong>iPhone-Vergleich</strong><span>2007 – 2026 · echte Größe</span></div>
+  <div class="seg mode" id="modeSeg" role="tablist" aria-label="Modus">
+    <button data-v="compare" role="tab">Vergleich</button><button data-v="upgrade" role="tab">Upgrade</button>
+  </div>
 </header>
 
 <nav class="float toolbar" aria-label="Steuerung">
-  <div class="ctl">
+  <div class="ctl" id="countCtl">
     <span class="lbl">Geräte</span>
     <div class="seg" id="countSeg" role="radiogroup" aria-label="Anzahl Geräte">
       <button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button>
@@ -50,20 +61,33 @@
   </div>
 </nav>
 
-<nav class="float views" aria-label="Ansicht">
-  <span class="lbl">Ansicht</span>
-  <div class="seg vertical" id="viewSeg">
-    <button data-v="front">Vorne</button><button data-v="back">Hinten</button>
-    <button data-v="left">Links</button><button data-v="right">Rechts</button>
-    <button data-v="top">Oben</button><button data-v="bottom">Unten</button>
-    <button data-v="three">3/4</button>
+<!-- Ansichts-Würfel -->
+<div class="float cube-wrap" id="cubeWrap">
+  <button class="cube-btn" id="cubeBtn" aria-expanded="false" aria-controls="cubeMenu" title="Ansicht wählen (F, B, L, R, O, U)">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4 35 12v16L20 36 5 28V12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 12l15 8 15-8M20 20v16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 12l15 8v16L5 28z" fill="currentColor" opacity=".18"/></svg>
+    <span>Ansicht</span>
+  </button>
+  <div class="cube-menu" id="cubeMenu" hidden>
+    <div class="cube-net" id="viewSeg">
+      <button data-v="top" style="grid-area:t">Oben<kbd>O</kbd></button>
+      <button data-v="left" style="grid-area:l">Links<kbd>L</kbd></button>
+      <button data-v="front" style="grid-area:f">Vorne<kbd>F</kbd></button>
+      <button data-v="right" style="grid-area:r">Rechts<kbd>R</kbd></button>
+      <button data-v="back" style="grid-area:b">Hinten<kbd>B</kbd></button>
+      <button data-v="bottom" style="grid-area:u">Unten<kbd>U</kbd></button>
+      <button data-v="three" style="grid-area:q" class="tq">3/4</button>
+    </div>
   </div>
-</nav>
+</div>
 
 <div class="float side-actions">
   <button class="pill-btn" id="specsBtn" aria-expanded="false" aria-controls="specsPanel">Vergleich &amp; Daten</button>
+  <button class="pill-btn" id="upgradeBtn" aria-expanded="false" aria-controls="upgradePanel" hidden>Upgrade-Beratung</button>
   <button class="ghost-btn" id="presentBtn" title="Präsentationsmodus (Taste P)">Präsentieren</button>
   <button class="icon-btn" id="resetBtn" title="Ansicht zurücksetzen" aria-label="Ansicht zurücksetzen">⟲</button>
+  <button class="icon-btn" id="settingsBtn" title="Einstellungen" aria-label="Einstellungen">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-1.7-1L15 3.5h-4L10.6 6a7.5 7.5 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 1.7-1l2.4 1 2-3.4zM13 15.5A3.5 3.5 0 1 1 13 8.5a3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
+  </button>
   <button class="icon-btn" id="helpBtn" title="Bedienung" aria-label="Bedienung">?</button>
 </div>
 
@@ -71,10 +95,11 @@
   <b>Bedienung</b>
   <ul>
     <li>Gerät ziehen: drehen (bei 1 Gerät: um das Gerät herumgehen)</li>
+    <li>Doppelklick auf ein Gerät: heranholen · <kbd>Esc</kbd>: zurück</li>
     <li>Tasten anklicken: drücken · Display antippen: entsperren</li>
-    <li>Hintergrund ziehen: Blickwinkel · Mausrad/Pinch: Zoom</li>
-    <li>Rechte Maustaste ziehen: verschieben</li>
-    <li>Präsentieren (Taste P): Vollbild, Bedienelemente aus, Drehteller an</li>
+    <li>Hintergrund ziehen: Blickwinkel · Mausrad: Zoom · rechte Maustaste: verschieben</li>
+    <li><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> drehen · <kbd>F</kbd> vorne · <kbd>B</kbd> hinten · <kbd>L</kbd> links · <kbd>R</kbd> rechts · <kbd>O</kbd> oben · <kbd>U</kbd> unten</li>
+    <li><kbd>P</kbd> Präsentieren (Vollbild, Drehteller an)</li>
   </ul>
 </div>
 
@@ -82,13 +107,16 @@
 
 <section class="float slots" id="slots" aria-label="Geräteauswahl"></section>
 
+<!-- Datenblatt -->
 <aside class="float specs" id="specsPanel" aria-label="Technische Daten" hidden>
   <div class="specs-head">
     <h2>Vergleich &amp; Daten</h2>
     <div class="ctl">
+      <label class="tog"><input type="checkbox" id="diffTog" /> <span>Nur Unterschiede</span></label>
       <div class="seg" id="priceSeg">
         <button data-v="nom">Damals</button><button data-v="real">Inflationsbereinigt</button>
       </div>
+      <button class="ghost-btn" id="pdfBtn" title="Vergleich als PDF speichern oder drucken">PDF</button>
       <button class="icon-btn" id="specsClose" aria-label="Schließen">✕</button>
     </div>
   </div>
@@ -96,6 +124,94 @@
   <p class="note" id="priceNote"></p>
   <p class="note">Maße & Daten: Apple Tech Specs, Apple Dimensional Drawings, Pressemitteilungen und Fachpresse. Preise = deutsche Apple-UVP zum Marktstart je Speichervariante; Inflationsbereinigung über den Verbraucherpreisindex (Destatis).</p>
 </aside>
+
+<!-- Upgrade-Beratung -->
+<aside class="float upgrade" id="upgradePanel" aria-label="Upgrade-Beratung" hidden>
+  <div class="specs-head">
+    <h2>Upgrade-Beratung</h2>
+    <div class="ctl">
+      <button class="ghost-btn" id="pdfBtn2" title="Beratung als PDF speichern oder drucken">PDF</button>
+      <button class="icon-btn" id="upgradeClose" aria-label="Schließen">✕</button>
+    </div>
+  </div>
+  <div class="up-from">
+    <span class="lbl">Kundengerät</span>
+    <button class="model-btn big" id="custBtn"></button>
+  </div>
+  <div class="up-sugg">
+    <span class="lbl">Vorschläge <small>(bis zu 3)</small></span>
+    <div class="chips" id="suggChips"></div>
+  </div>
+  <div class="up-list" id="upList"></div>
+</aside>
+
+<!-- Geräteauswahl -->
+<div class="modal" id="picker" hidden>
+  <div class="modal-box picker-box" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
+    <div class="picker-head">
+      <h2 id="pickerTitle">Gerät wählen</h2>
+      <input type="search" id="pickerSearch" placeholder="Suchen, z. B. „15 Pro“ oder „2019“" autocomplete="off" />
+      <button class="icon-btn" id="pickerClose" aria-label="Schließen">✕</button>
+    </div>
+    <div class="picker-body" id="pickerBody"></div>
+  </div>
+</div>
+
+<!-- Einstellungen -->
+<div class="modal" id="settings" hidden>
+  <div class="modal-box settings-box" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="picker-head">
+      <h2 id="settingsTitle">Einstellungen</h2>
+      <button class="icon-btn" id="settingsClose" aria-label="Schließen">✕</button>
+    </div>
+    <div class="set-row">
+      <div><b>Tageszeit im Showroom</b><small>Beleuchtung und Blick nach draußen</small></div>
+      <div class="seg" id="daySeg"><button data-v="day">Tag</button><button data-v="night">Nacht</button></div>
+    </div>
+    <div class="set-row">
+      <div><b>Telekom-Preise</b><small id="tkStatus">–</small></div>
+    </div>
+    <div class="set-row admin" id="adminBox">
+      <div><b>Admin</b><small id="adminInfo">Zum Bearbeiten der Telekom-Preise anmelden.</small></div>
+      <form id="loginForm" class="login">
+        <input type="password" id="adminPw" placeholder="Passwort" autocomplete="current-password" />
+        <button class="pill-btn" type="submit">Anmelden</button>
+      </form>
+      <div class="admin-actions" id="adminActions" hidden>
+        <button class="pill-btn" id="editPricesBtn">Preise bearbeiten</button>
+        <button class="ghost-btn" id="logoutBtn">Abmelden</button>
+      </div>
+      <p class="err" id="loginErr" hidden></p>
+    </div>
+  </div>
+</div>
+
+<!-- Admin: Telekom-Preise bearbeiten -->
+<div class="modal" id="adminEditor" hidden>
+  <div class="modal-box editor-box" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+    <div class="picker-head">
+      <h2 id="editorTitle">Telekom-Preise bearbeiten</h2>
+      <button class="icon-btn" id="editorClose" aria-label="Schließen">✕</button>
+    </div>
+    <div class="editor-meta">
+      <label>Tarif-Bezeichnung <input type="text" id="tkTariff" maxlength="60" placeholder="z. B. MagentaMobil M" /></label>
+      <label>Hinweis <input type="text" id="tkNote" maxlength="300" placeholder="z. B. Preise inkl. MwSt., Laufzeit 24 Monate, Stand …" /></label>
+    </div>
+    <div class="editor-filter">
+      <input type="search" id="edSearch" placeholder="Modell suchen" />
+      <label class="tog"><input type="checkbox" id="edCurrent" checked /> <span>nur aktuelle Modelle (ab 2024)</span></label>
+    </div>
+    <div class="editor-table"><table id="edTable"></table></div>
+    <div class="editor-foot">
+      <span class="note" id="edMsg">Leere Felder = kein Telekom-Preis (dann wird die Apple-UVP gezeigt).</span>
+      <button class="ghost-btn" id="edCancel">Abbrechen</button>
+      <button class="pill-btn" id="edSave">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Druckansicht (PDF) -->
+<div id="printSheet" aria-hidden="true"></div>
 
 <script type="module" src="app.js"></script>
 </body>

@@ -10,4 +10,17 @@ services:
       # routet z.B. iphone.oualid.de hierher. Port 8103 gewählt, weil 8080/8081 und
       # 8092-8102 schon von den Spielen und dem Spielehub belegt sind.
       - "127.0.0.1:8103:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # Kleine API für die Telekom-Preise (Admin-Bereich). Das Passwort steht in der
+  # Datei .env neben dieser Datei (ADMIN_PASSWORD=...), die nicht ins Git gehört.
+  api:
+    build: ./api
+    environment:
+      - TZ=Europe/Berlin
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
+    volumes:
+      - ./data:/data
     restart: unless-stopped
